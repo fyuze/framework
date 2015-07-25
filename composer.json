@@ -1,0 +1,16 @@
+{
+  "name": "fyuze/framework",
+  "description": "Fyuze framework",
+  "license": "MIT",
+  "require": {
+    "php": ">=5.5"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "4.7.*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Fyuze\\": "src/Fyuze/"
+    }
+  }
+}
