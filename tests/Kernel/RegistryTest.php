@@ -30,9 +30,7 @@ class KernelRegistryTest extends \PHPUnit_Framework_TestCase
     {
         $registry = Registry::init();
         $mock = $registry->make('RegistryTestStub');
-        $mock2 = $registry->make('RegistryTestStub');
-        $this->assertInstanceOf('RegistryTestStub', $mock);
-        $this->assertSame($mock, $mock2);
+        $this->assertSame($mock, $registry->make('RegistryTestStub'));
     }
 
     public function testMakeClassFromObject()
@@ -41,12 +39,12 @@ class KernelRegistryTest extends \PHPUnit_Framework_TestCase
         $stub = new RegistryTestStub();
         $stub->is_true = true;
         $mock = $registry->make($stub);
-        $this->assertInstanceOf('RegistryTestStub', $mock);
+        $this->assertSame($stub, $mock);
+        $this->assertTrue($mock->is_true);
     }
 }
 
 
 class RegistryTestStub
 {
-    public $is_true = false;
 }
