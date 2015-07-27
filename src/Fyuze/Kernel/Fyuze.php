@@ -2,7 +2,6 @@
 namespace Fyuze\Kernel;
 
 use Fyuze\Config\Config;
-use Symfony\Component\Yaml\Exception\RuntimeException;
 
 abstract class Fyuze
 {
