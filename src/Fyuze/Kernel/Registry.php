@@ -4,16 +4,22 @@ namespace Fyuze\Kernel;
 class Registry
 {
     /**
-     * @var null
+     * Singleton instance
+     *
+     * @var static
      */
     protected static $instance = null;
 
     /**
+     * Registerd services
+     *
      * @var array
      */
     protected $members = [];
 
     /**
+     * Initialize object
+     *
      * @return static
      */
     public static function init()
