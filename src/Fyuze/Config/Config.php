@@ -118,10 +118,12 @@ class Config implements Countable
         $extension = $file->getExtension();
         $name = $file->getBasename(".$extension");
 
-        $type = reset(array_filter($this->types, function ($n) use ($extension) {
+        $type = array_filter($this->types, function ($n) use ($extension) {
             return in_array($extension, $n::$extensions);
-        }));
+        });
 
-        return [$name, (new $type)->parse($file)];
+        $class = reset($type);
+
+        return [$name, (new $class)->parse($file)];
     }
 }
