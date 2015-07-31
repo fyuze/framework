@@ -17,7 +17,6 @@ class ConfigTest extends PHPUnit_Framework_TestCase
 
         // Would be exception otherwise
         $this->assertInstanceOf('Fyuze\Config\Config', $config);
-        $this->assertEquals(2, count($config));
     }
 
     public function testConfigGetsKey()

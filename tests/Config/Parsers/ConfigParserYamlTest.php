@@ -12,4 +12,18 @@ class ConfigParserYamlTest extends PHPUnit_Framework_TestCase
 
         $this->assertArrayHasKey('charset', $config);
     }
+
+    /**
+     * @expectedException RuntimeException
+     */
+    public function testThrowsExceptionOnInvalidConfig()
+    {
+        $parser = new \Fyuze\Config\Parsers\Yaml();
+
+        $path = realpath(__DIR__ . '/../../mocks/resources/config/invalid/yaml') . '/app.yml';
+        $file = new SplFileInfo($path);
+        $contents =$parser->parse($file);
+
+        die(var_dump($contents));
+    }
 }

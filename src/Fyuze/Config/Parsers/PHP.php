@@ -2,6 +2,7 @@
 namespace Fyuze\Config\Parsers;
 
 use SplFileInfo;
+use RuntimeException;
 
 class PHP
 {
@@ -13,9 +14,16 @@ class PHP
     /**
      * @param SplFileInfo $file
      * @return array
+     * @throws RuntimeException
      */
     public function parse(SplFileInfo $file)
     {
-        return require $file->getRealPath();
+        $contents = require $file->getRealPath();
+
+        if (!is_array($contents)) {
+            throw new RuntimeException(sprintf('The configuration file %s did not return an array', $file->getBasename('.php')));
+        }
+
+        return $contents;
     }
 }
