@@ -8,7 +8,7 @@ use InvalidArgumentException;
 use Fyuze\Config\Parsers\PHP;
 use Fyuze\Config\Parsers\Yaml;
 
-class Config implements Countable
+class Config
 {
     /**
      * The configuration path
@@ -79,14 +79,6 @@ class Config implements Countable
     public function set($key, $value)
     {
         return $this->configs[$key] = $value;
-    }
-
-    /**
-     * @return int
-     */
-    public function count()
-    {
-        return count($this->configs);
     }
 
     /**
