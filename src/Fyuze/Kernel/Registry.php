@@ -38,8 +38,12 @@ class Registry
     {
         $key = is_object($member) ? get_class($member) : $member;
 
-        // Member is already bound, retrieve it
+        if (is_object($member)) {
+            return $this->register($member);
+        }
+
         if (array_key_exists($key, $this->members)) {
+
             return $this->members[$key];
         }
 
@@ -51,14 +55,10 @@ class Registry
      * @return mixed|void
      * @throws \InvalidArgumentException
      */
-    public function add($instance)
+    protected function add($instance)
     {
         if (is_string($instance) && class_exists($instance)) {
             return $this->create($instance);
-        }
-
-        if (is_object($instance)) {
-            return $this->register($instance);
         }
 
         throw new \InvalidArgumentException('You must provide a valid class name or object.');
