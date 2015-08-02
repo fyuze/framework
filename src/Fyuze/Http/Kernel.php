@@ -2,10 +2,12 @@
 namespace Fyuze\Http;
 
 use Symfony\Component\HttpKernel\Controller\ControllerResolver;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
+use Symfony\Component\HttpFoundation\Request as BaseRequest;
 
-class Kernel
+class Kernel implements HttpKernelInterface
 {
     /**
      *
@@ -31,11 +33,12 @@ class Kernel
     }
 
     /**
-     *
      * @param Request $request
-     * @return mixed|Response
+     * @param int $type
+     * @param bool|true $catch
+     * @return Response|mixed
      */
-    public function handle(Request $request)
+    public function handle(BaseRequest $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true)
     {
         $this->matcher->getContext()->fromRequest($request);
 
