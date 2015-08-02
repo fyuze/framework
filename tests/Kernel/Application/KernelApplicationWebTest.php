@@ -19,9 +19,8 @@ class KernelApplicationWebTest extends PHPUnit_Framework_TestCase
         $app = new \Fyuze\Kernel\Application\Web($path);
 
         /** @var \Fyuze\Http\Request $request */
-        $request = $app->getRegistry()->make('Fyuze\Http\Request');
-        $app->getRegistry()->make($request->create('/foo'));
-        $response = $app->boot();
+        $request = $app->getContainer()->make('Fyuze\Http\Request');
+        $response = $app->boot($request->create('/foo'));
 
         $this->assertInstanceOf('Fyuze\Http\Response', $response);
         $this->assertEquals(404, $response->getStatusCode());
@@ -33,9 +32,8 @@ class KernelApplicationWebTest extends PHPUnit_Framework_TestCase
         $app = new \Fyuze\Kernel\Application\Web($path);
 
         /** @var \Fyuze\Http\Request $request */
-        $request = $app->getRegistry()->make('Fyuze\Http\Request');
-        $app->getRegistry()->make($request->create('/throwD'));
-        $response = $app->boot();
+        $request = $app->getContainer()->make('Fyuze\Http\Request');
+        $response = $app->boot($request->create('/throwD'));
 
         $this->assertInstanceOf('Fyuze\Http\Response', $response);
         $this->assertEquals(500, $response->getStatusCode());

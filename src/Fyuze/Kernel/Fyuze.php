@@ -2,6 +2,7 @@
 namespace Fyuze\Kernel;
 
 use Fyuze\Config\Config;
+use Illuminate\Container\Container;
 
 abstract class Fyuze
 {
@@ -21,11 +22,11 @@ abstract class Fyuze
     protected $initialized = false;
 
     /**
-     * The registry container
+     * the IoC container
      *
-     * @var Registry
+     * @var Container
      */
-    protected $registry;
+    protected $container;
 
     /**
      * Application path
@@ -76,9 +77,9 @@ abstract class Fyuze
     /**
      * @return Registry
      */
-    public function getRegistry()
+    public function getContainer()
     {
-        return $this->registry;
+        return $this->container;
     }
 
     /**
@@ -102,13 +103,15 @@ abstract class Fyuze
      */
     protected function init()
     {
-        $registry = Registry::init();
-        $registry->make($this);
+        $container = new Container();
 
-        $this->config = new Config($this->getConfigPath(), 'prod');
-        $registry->make($this->config);
+        $container->bind('config', function() {
+            return new Config($this->getConfigPath(), 'prod');
+        });
 
-        $this->registry = $registry;
+        $this->config = $container->make('config');
+
+        $this->container = $container;
         $this->initialized = true;
 
         $config = $this->config->get('app');
