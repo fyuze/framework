@@ -6,6 +6,8 @@ use Fyuze\Http\Request;
 use Fyuze\Http\Response;
 use Fyuze\Kernel\Fyuze;
 use Symfony\Component\HttpKernel\Controller\ControllerResolver;
+use Symfony\Component\HttpKernel\HttpCache\HttpCache;
+use Symfony\Component\HttpKernel\HttpCache\Store;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
 
@@ -24,6 +26,7 @@ class Web extends Fyuze
         $resolver = new ControllerResolver();
 
         $kernel = new Kernel($matcher, $resolver);
+        $kernel = new HttpCache($kernel, new Store($this->path.'/app/cache'));
         return $kernel->handle($request);
     }
 }
