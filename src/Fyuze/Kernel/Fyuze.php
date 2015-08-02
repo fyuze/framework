@@ -95,7 +95,7 @@ abstract class Fyuze
      */
     public function getConfigPath()
     {
-        return $this->getPath() . DIRECTORY_SEPARATOR . 'resources' . DIRECTORY_SEPARATOR . 'config';
+        return $this->getPath() . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'config';
     }
 
     /**
