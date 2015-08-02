@@ -14,9 +14,9 @@ class Web extends Fyuze
     /**
      * @return Response
      */
-    public function boot()
+    public function boot($request = null)
     {
-        $request = Request::createFromGlobals();
+        $request = $this->getRegistry()->make('Fyuze\Http\Request');
         $routes = include $this->path . '/routes.php';
 
         $context = new RequestContext();
@@ -24,8 +24,6 @@ class Web extends Fyuze
         $resolver = new ControllerResolver();
 
         $kernel = new Kernel($matcher, $resolver);
-        $response = $kernel->handle($request);
-
-        return $response->send();
+        return $kernel->handle($request);
     }
 }
