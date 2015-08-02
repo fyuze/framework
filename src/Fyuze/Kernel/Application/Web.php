@@ -20,7 +20,7 @@ class Web extends Fyuze
     {
         $request = (null === $request) ? Request::createFromGlobals() : $request;
         $this->getContainer()->instance('request', $request);
-        $routes = include $this->path . '/routes.php';
+        $routes = include $this->path . '/app/routes.php';
 
         $context = new RequestContext();
         $matcher = new UrlMatcher($routes, $context);
