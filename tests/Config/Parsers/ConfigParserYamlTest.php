@@ -6,7 +6,7 @@ class ConfigParserYamlTest extends PHPUnit_Framework_TestCase
     {
         $parser = new \Fyuze\Config\Parsers\Yaml();
 
-        $path = realpath(__DIR__ . '/../../mocks/resources/config') . '/app.yml';
+        $path = realpath(__DIR__ . '/../../mocks/app/config') . '/app.yml';
         $file = new SplFileInfo($path);
         $config = $parser->parse($file);
 
@@ -20,7 +20,7 @@ class ConfigParserYamlTest extends PHPUnit_Framework_TestCase
     {
         $parser = new \Fyuze\Config\Parsers\Yaml();
 
-        $path = realpath(__DIR__ . '/../../mocks/resources/config/invalid/yaml') . '/app.yml';
+        $path = realpath(__DIR__ . '/../../mocks/app/config/invalid/yaml') . '/app.yml';
         $file = new SplFileInfo($path);
         $contents =$parser->parse($file);
 

@@ -6,7 +6,7 @@ class ConfigParserPHPTest extends PHPUnit_Framework_TestCase
     {
         $parser = new \Fyuze\Config\Parsers\PHP();
 
-        $path = realpath(__DIR__ . '/../../mocks/resources/config') . '/app-php.php';
+        $path = realpath(__DIR__ . '/../../mocks/app/config') . '/app-php.php';
         $file = new SplFileInfo($path);
         $config = $parser->parse($file);
 
@@ -20,7 +20,7 @@ class ConfigParserPHPTest extends PHPUnit_Framework_TestCase
     {
         $parser = new \Fyuze\Config\Parsers\PHP();
 
-        $path = realpath(__DIR__ . '/../../mocks/resources/config/invalid/php') . '/app.php';
+        $path = realpath(__DIR__ . '/../../mocks/app/config/invalid/php') . '/app.php';
         $file = new SplFileInfo($path);
         $parser->parse($file);
     }

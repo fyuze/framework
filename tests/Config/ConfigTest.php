@@ -8,7 +8,7 @@ class ConfigTest extends PHPUnit_Framework_TestCase
     {
         parent::setUp();
 
-        $this->configPath = realpath(__DIR__ . '/../mocks/resources/config');
+        $this->configPath = realpath(__DIR__ . '/../mocks/app/config');
     }
 
     public function testConfigParsesFile()

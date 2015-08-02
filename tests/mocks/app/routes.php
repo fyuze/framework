@@ -7,12 +7,12 @@ use Symfony\Component\Routing\Route;
 
 $collection = new RouteCollection();
 $collection->add('testRoute', new Route('/', array(
-    '_controller' => function (Request $request) {
+    '_controller' => function () {
         return new Response('Hi');
     }
 )));
 $collection->add('errorRoute', new Route('/throwD', array(
-    '_controller' => function (Request $request) {
+    '_controller' => function () {
         throw new Exception('error');
     }
 )));
