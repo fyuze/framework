@@ -2,6 +2,7 @@
 namespace Fyuze\Kernel;
 
 use Fyuze\Config\Config;
+use Fyuze\Routing\Collection;
 use Illuminate\Container\Container;
 
 abstract class Fyuze
@@ -117,6 +118,7 @@ abstract class Fyuze
         $this->config = new Config($this->getConfigPath(), 'prod');
 
         $container->instance('config', $this->config);
+        $container->instance('routes', new Collection());
 
         $this->container = $container;
     }
@@ -129,6 +131,11 @@ abstract class Fyuze
         mb_internal_encoding($this->charset);
 
         date_default_timezone_set($config['timezone']);
+    }
+
+    protected function loadRoutes()
+    {
+        return $this->container['routes'];
     }
 
     abstract public function boot();
