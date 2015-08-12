@@ -7,6 +7,6 @@ services:
 modules:
  -
 error_handler:
- -log_errors: true
- -log_prefix: fyuze
- -log_frequency: daily
+ - log_errors: true
+ - log_prefix: fyuze
+ - log_frequency: daily
