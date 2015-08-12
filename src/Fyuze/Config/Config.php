@@ -47,7 +47,8 @@ class Config
     {
         $this->path = $path;
         $this->env = $env;
-        $this->load($path, $env);
+        $this->load();
+
     }
 
     /**
@@ -87,18 +88,21 @@ class Config
      * @return array
      * @throws InvalidArgumentException
      */
-    protected function load($path, $env)
+    protected function load()
     {
-        if (!is_dir($path)) {
-            throw new InvalidArgumentException('The path you defined is not a valid directory: ' . $path);
+        if (!is_dir($this->path)) {
+            throw new InvalidArgumentException(sprintf('The path you defined is not a valid directory: %s', $this->path));
         }
 
-        foreach (new GlobIterator($path . '/*.*') as $file) {
+
+        foreach (new GlobIterator($this->path . '/*.*') as $file) {
 
             list($key, $value) = $this->getType($file);
 
             $this->configs[$key] = $value;
         }
+
+
     }
 
     /**
