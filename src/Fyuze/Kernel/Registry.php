@@ -69,9 +69,7 @@ class Registry
      */
     public static function dump()
     {
-        $instance = static::$instance;
-        unset($instance->members);
-        $instance->members = [];
+        static::$instance->members = [];
     }
 
     /**
