@@ -110,6 +110,9 @@ abstract class Fyuze
         $this->initialized = true;
     }
 
+    /**
+     *
+     */
     protected function setupContainer()
     {
         $container = new Container();
@@ -123,6 +126,9 @@ abstract class Fyuze
         $this->container = $container;
     }
 
+    /**
+     *
+     */
     protected function configure()
     {
         $config = $this->config->get('app');
@@ -133,10 +139,23 @@ abstract class Fyuze
         date_default_timezone_set($config['timezone']);
     }
 
+    /**
+     * @return mixed
+     */
     protected function loadRoutes()
     {
-        return $this->container['routes'];
+        $router = $this->container['routes'];
+        $routes = realpath($this->getPath() . '/app/routes.php');
+
+        if (file_exists($routes)) {
+            include_once $routes;
+        }
+
+        return $router;
     }
 
+    /**
+     * @return mixed
+     */
     abstract public function boot();
 }

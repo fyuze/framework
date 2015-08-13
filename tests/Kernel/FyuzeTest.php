@@ -7,6 +7,7 @@ class KernelFyuzeTest extends \PHPUnit_Framework_TestCase
     public function testWebApplication()
     {
         $app = (new Web(realpath(__DIR__ . '/../mocks')));
+        $app->boot();
         $this->assertInstanceOf('Illuminate\Container\Container', $app->getContainer());
     }
 
