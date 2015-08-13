@@ -130,7 +130,7 @@ class Request
                 return array_key_exists($key, $_SERVER);
             });
 
-            $ip = count($filter) ? $_SERVER[$filter[0]] : null;
+            $ip = count($filter) ? $_SERVER[reset($filter)] : null;
         }
 
         return (false !== filter_var($ip, FILTER_VALIDATE_IP)) ? $ip : '127.0.0.1';
