@@ -8,7 +8,7 @@ class KernelApplicationWebTest extends PHPUnit_Framework_TestCase
     {
         $path = realpath(__DIR__ . '/../../mocks');
         $app = new \Fyuze\Kernel\Application\Web($path);
-        $app->getContainer()->make('routes')->get('', 'index', function () {
+        $app->getContainer()->make('Fyuze\Routing\Collection')->get('', 'index', function () {
             return new Response('Hello, World!');
         });
         $response = $app->boot();
@@ -32,7 +32,7 @@ class KernelApplicationWebTest extends PHPUnit_Framework_TestCase
     {
         $path = realpath(__DIR__ . '/../../mocks');
         $app = new \Fyuze\Kernel\Application\Web($path);
-        $app->getContainer()->make('routes')->get('', 'error', function () {
+        $app->getContainer()->make('Fyuze\Routing\Collection')->get('', 'error', function () {
             throw new Exception;
         });
         $response = $app->boot();

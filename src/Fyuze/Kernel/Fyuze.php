@@ -115,13 +115,13 @@ abstract class Fyuze
      */
     protected function setupContainer()
     {
-        $container = new Container();
-        $container->instance('app', $this);
+        $container = new Registry();
+        //$container->make('app', $this);
 
         $this->config = new Config($this->getConfigPath(), 'prod');
 
-        $container->instance('config', $this->config);
-        $container->instance('routes', new Collection());
+        $container->make($this->config);
+        $container->make(new Collection());
 
         $this->container = $container;
     }
@@ -144,7 +144,7 @@ abstract class Fyuze
      */
     protected function loadRoutes()
     {
-        $router = $this->container['routes'];
+        $router = $this->container->make('Fyuze\Routing\Collection');
         $routes = realpath($this->getPath() . '/app/routes.php');
 
         if (file_exists($routes)) {
