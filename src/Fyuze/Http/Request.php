@@ -125,18 +125,14 @@ class Request
         }
 
         if (!isset($ip)) {
-            foreach (['HTTP_CLIENT_IP', 'HTTP_X_CLUSTER_CLIENT_IP', 'REMOTE_ADDR'] as $key) {
-                if (!empty($_SERVER[$key])) {
-                    $ip = $_SERVER[$key];
-                    break;
-                }
-            }
+
+            $filter = array_filter(['HTTP_CLIENT_IP', 'HTTP_X_CLUSTER_CLIENT_IP', 'REMOTE_ADDR'], function ($key) {
+                return array_key_exists($key, $_SERVER);
+            });
+
+            $ip = count($filter) ? $_SERVER[$filter[0]] : null;
         }
 
-        if (isset($ip) && false !== filter_var($ip, FILTER_VALIDATE_IP)) {
-            return $ip;
-        }
-
-        return '127.0.0.1';
+        return (false !== filter_var($ip, FILTER_VALIDATE_IP)) ? $ip : '127.0.0.1';
     }
 }
