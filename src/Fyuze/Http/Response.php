@@ -30,12 +30,12 @@ class Response
     protected $body;
 
     /**
-     * @var
+     * @var boolean
      */
     protected $cache = false;
 
     /**
-     * @var
+     * @var boolean
      */
     protected $compression = true;
 
@@ -50,9 +50,9 @@ class Response
     }
 
     /**
-     * @param $key
-     * @param null $value
-     * @return null
+     * @param string $key
+     * @param mixed $value
+     * @return mixed
      */
     public function header($key, $value = null)
     {
@@ -67,7 +67,7 @@ class Response
     /**
      * Set response caching, blank for default
      *
-     * @param bool|false $value
+     * @param boolean $value
      */
     public function setCache($value = false)
     {
@@ -77,7 +77,7 @@ class Response
     /**
      * Set output compression, blank for default
      *
-     * @param bool|true $value
+     * @param boolean $value
      */
     public function setCompression($value = true)
     {
@@ -104,6 +104,8 @@ class Response
 
     /**
      * Sends the response
+     * We ignore coverage here because
+     * headers cannot be tested in cli sapi
      *
      * @codeCoverageIgnore
      */

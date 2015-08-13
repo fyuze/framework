@@ -3,7 +3,6 @@ namespace Fyuze\Kernel;
 
 use Fyuze\Config\Config;
 use Fyuze\Routing\Collection;
-use Illuminate\Container\Container;
 
 abstract class Fyuze
 {
@@ -25,7 +24,7 @@ abstract class Fyuze
     /**
      * the IoC container
      *
-     * @var Container
+     * @var Registry
      */
     protected $container;
 
@@ -116,7 +115,7 @@ abstract class Fyuze
     protected function setupContainer()
     {
         $container = new Registry();
-        //$container->make('app', $this);
+        $container->make($this);
 
         $this->config = new Config($this->getConfigPath(), 'prod');
 
