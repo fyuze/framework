@@ -2,6 +2,7 @@
 namespace Fyuze\Routing;
 
 use Closure;
+use InvalidArgumentException;
 
 class Route
 {
@@ -43,7 +44,7 @@ class Route
 
 
     /**
-     * @return Closure
+     * @return mixed Closure|Controller
      */
     public function getAction()
     {
@@ -52,7 +53,13 @@ class Route
             return $this->action;
         }
 
-        throw new \RuntimeException('Only closures can be used for route actions for now.');
+        list($controller, $method) = explode('@', $this->action);
+
+        if (!class_exists($controller)) {
+            throw new InvalidArgumentException('Invalid controller specified');
+        }
+
+        return [new $controller, $method];
     }
 
     /**
