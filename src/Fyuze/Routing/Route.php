@@ -69,4 +69,15 @@ class Route
     {
         return [];
     }
+
+    /**
+     * Check if route matches given url
+     *
+     * @param $url
+     * @return bool
+     */
+    public function matches($url)
+    {
+        return (new Matcher($this, $url))->resolves();
+    }
 }
