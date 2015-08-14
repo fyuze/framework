@@ -10,6 +10,8 @@ class Request
      */
     protected $headers = [];
 
+    protected $attributes = [];
+
     /**
      * @var
      */
@@ -52,13 +54,28 @@ class Request
      */
     public static function create($uri = '', $method = 'GET')
     {
-        return new static($uri, $method);
+        $server = array_replace(array(
+            'SERVER_NAME' => 'localhost',
+            'SERVER_PORT' => 80,
+            'HTTP_HOST' => 'localhost',
+            'HTTP_USER_AGENT' => 'Fyuze/0.1.x',
+            'REMOTE_ADDR' => '127.0.0.1',
+            'SERVER_PROTOCOL' => 'HTTP/1.1',
+            'REQUEST_TIME' => time(),
+            'REQUEST_URI' => $uri
+        ), $_SERVER);
+
+        return new static(
+            $server['REQUEST_URI'],
+            $method
+        );
     }
 
     /**
      * @return string
      */
-    public function getUri()
+    public
+    function getUri()
     {
         return $this->uri;
     }
@@ -68,7 +85,8 @@ class Request
      *
      * @return string
      */
-    public function ip()
+    public
+    function ip()
     {
         return $this->getIp();
     }
@@ -78,7 +96,8 @@ class Request
      * @param null $value
      * @return null
      */
-    public function header($key, $value = null)
+    public
+    function header($key, $value = null)
     {
         if (null !== $value) {
             // We are setting a header
@@ -93,7 +112,8 @@ class Request
      * @param null $value
      * @return null
      */
-    public function server($key, $value = null)
+    public
+    function server($key, $value = null)
     {
         if (null !== $value) {
             // We are setting a header
@@ -102,10 +122,12 @@ class Request
 
         return $_SERVER[$key];
     }
+
     /**
      * @return bool
      */
-    public function isAjax()
+    public
+    function isAjax()
     {
         return array_key_exists('HTTP_X_REQUESTED_WITH', $_SERVER) && $this->server('HTTP_X_REQUESTED_WITH') === 'XMLHttpRequest';
     }
@@ -116,7 +138,8 @@ class Request
      * @return array|mixed
      * @throws \RuntimeException
      */
-    protected function getIp()
+    protected
+    function getIp()
     {
         if (!empty($this->header('HTTP_X_FORWARDED_FOR'))) {
 

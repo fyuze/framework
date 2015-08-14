@@ -37,15 +37,19 @@ class RouteTest extends PHPUnit_Framework_TestCase
 
     public function testRouteWithOptionalTokens()
     {
-        $route = new Route('/hello/{name?}/{id?}', 'index', 'TestController@helloAction');
+        $route = new Route('/foo/{bar?}/{baz?}', 'index', 'TestController@helloAction');
 
-        $this->assertInstanceOf('TestController', $route->getAction()[0]);
-        $this->assertEquals('helloAction', $route->getAction()[1]);
-        $this->assertTrue($route->matches('/hello'));
-        $this->assertTrue($route->matches('/hello/test'));
-        $this->assertTrue($route->matches('/hello/test/test'));
+        list($controller, $method) = $route->getAction();
+
+        $this->assertInstanceOf('TestController', $controller);
+        $this->assertEquals('helloAction', $method);
+        $this->assertTrue($route->matches('/foo'));
+        $this->assertTrue($route->matches('/foo/bar'));
+        $this->assertTrue($route->matches('/foo/bar/baz'));
         $this->assertFalse($route->matches('/'));
-        $this->assertFalse($route->matches('/hello/test/test/test'));
+        $this->assertFalse($route->matches('/foo/bar/baz/biz'));
+
+        $this->assertEquals('Hello, Matthew!', call_user_func_array([$controller, $method], ['Matthew']));
     }
 
     /**

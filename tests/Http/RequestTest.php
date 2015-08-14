@@ -4,6 +4,20 @@ use Fyuze\Http\Request;
 
 class HttpRequestTest extends PHPUnit_Framework_TestCase
 {
+    public function testResolvesFromGlobals()
+    {
+        $_SERVER['REQUEST_URI'] = '/foo/bar';
+        $request = Request::create();
+
+        $this->assertEquals('/foo/bar', $request->getUri());
+        unset($_SERVER['REQUEST_URI']);
+    }
+
+    public function testResolvesDefinedUrl()
+    {
+        $this->assertEquals('/foo', Request::create('/foo')->getUri());
+    }
+
     public function testResolveIp()
     {
         $request = Request::create();
