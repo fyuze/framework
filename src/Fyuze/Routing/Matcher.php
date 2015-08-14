@@ -32,9 +32,15 @@ class Matcher
     {
         if (preg_match($this->compileRegex(), $this->request->getPath(), $parameters) > 0) {
 
-            $this->request->setParams(array_filter($parameters, function($n) {
-                return !is_int($n);
-            }, ARRAY_FILTER_USE_KEY));
+            $params = [];
+
+            foreach ($parameters as $key => $value) {
+                if (!is_int($key)) {
+                    $params[$key] = $value;
+                }
+            }
+
+            $this->request->setParams($params);
 
             return true;
         }
