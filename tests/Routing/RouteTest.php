@@ -1,7 +1,8 @@
 <?php
 
-use Fyuze\Routing\Route;
+use Fyuze\Http\Request;
 use Fyuze\Http\Response;
+use Fyuze\Routing\Route;
 
 class RouteTest extends PHPUnit_Framework_TestCase
 {
@@ -30,9 +31,9 @@ class RouteTest extends PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('TestController', $route->getAction()[0]);
         $this->assertEquals('helloAction', $route->getAction()[1]);
-        $this->assertTrue($route->matches('/hello/bob/1'));
-        $this->assertFalse($route->matches('/'));
-        $this->assertFalse($route->matches('/hello'));
+        $this->assertTrue($route->matches(Request::create('/hello/bob/1')));
+        $this->assertFalse($route->matches(Request::create('/')));
+        $this->assertFalse($route->matches(Request::create('/hello')));
     }
 
     public function testRouteWithOptionalTokens()
@@ -43,11 +44,11 @@ class RouteTest extends PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('TestController', $controller);
         $this->assertEquals('helloAction', $method);
-        $this->assertTrue($route->matches('/foo'));
-        $this->assertTrue($route->matches('/foo/bar'));
-        $this->assertTrue($route->matches('/foo/bar/baz'));
-        $this->assertFalse($route->matches('/'));
-        $this->assertFalse($route->matches('/foo/bar/baz/biz'));
+        $this->assertTrue($route->matches(Request::create('/foo')));
+        $this->assertTrue($route->matches(Request::create('/foo/bar')));
+        $this->assertTrue($route->matches(Request::create('/foo/bar/baz')));
+        $this->assertFalse($route->matches(Request::create('/')));
+        $this->assertFalse($route->matches(Request::create('/foo/bar/baz/biz')));
 
         $this->assertEquals('Hello, Matthew!', call_user_func_array([$controller, $method], ['Matthew']));
     }

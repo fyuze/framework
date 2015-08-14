@@ -6,16 +6,22 @@ class HttpRequestTest extends PHPUnit_Framework_TestCase
 {
     public function testResolvesFromGlobals()
     {
-        $_SERVER['REQUEST_URI'] = '/foo/bar';
+        $_SERVER['REQUEST_URI'] = '/index.php/foo';
         $request = Request::create();
 
-        $this->assertEquals('/foo/bar', $request->getUri());
+        $this->assertEquals('/foo', $request->getUri());
         unset($_SERVER['REQUEST_URI']);
     }
 
     public function testResolvesDefinedUrl()
     {
         $this->assertEquals('/foo', Request::create('/foo')->getUri());
+    }
+
+    public function testResolvesQueryString() {
+        $request = Request::create('/foo?bar=baz');
+        $this->assertEquals('/foo', $request->getPath());
+        $this->assertEquals('/foo?bar=baz', $request->getUri());
     }
 
     public function testResolveIp()

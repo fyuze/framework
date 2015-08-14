@@ -1,16 +1,28 @@
 <?php
 namespace Fyuze\Routing;
 
+use Fyuze\Http\Request;
+
 class Matcher
 {
     /**
-     * @param Route $route
-     * @param $url
+     * @var Request
      */
-    public function __construct(Route $route, $url)
+    protected $request;
+
+    /**
+     * @var Route
+     */
+    protected $route;
+
+    /**
+     * @param Request $request
+     * @param Route $route
+     */
+    public function __construct(Request $request, Route $route)
     {
+        $this->request = $request;
         $this->route = $route;
-        $this->url = $url;
     }
 
     /**
@@ -18,7 +30,15 @@ class Matcher
      */
     public function resolves()
     {
-        return (bool) preg_match($this->compileRegex(), $this->url, $parameters);
+        if (preg_match($this->compileRegex(), $this->request->getPath(), $parameters) > 0) {
+
+            $this->request->setParams(array_filter($parameters, function($n) {
+                return !is_int($n);
+            }, ARRAY_FILTER_USE_KEY));
+
+            return true;
+        }
+        return false;
     }
 
     /**

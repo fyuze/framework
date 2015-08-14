@@ -30,7 +30,7 @@ class Kernel
             
             $route = $this->router->resolve($request);
 
-            return call_user_func_array($route->getAction(), $route->getParams());
+            return call_user_func_array($route->getAction(), $request->getParams());
 
         } catch (NotFoundException $e) {
 

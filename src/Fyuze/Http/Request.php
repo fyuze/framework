@@ -10,7 +10,10 @@ class Request
      */
     protected $headers = [];
 
-    protected $attributes = [];
+    /**
+     * @var array
+     */
+    protected $params = [];
 
     /**
      * @var
@@ -37,22 +40,24 @@ class Request
     /**
      * @param $uri
      * @param string $method
-     * @param array $options
+     * @param array $attributes
      */
-    public function __construct($uri, $method = 'GET', array $options = [])
+    public function __construct($uri, $method = 'GET', array $attributes = [])
     {
-        $this->uri = $uri;
+        $this->uri = $this->renderUri($uri);
         //$this->headers = $this->getHeaders();
         $this->ip = $this->getIp();
+        $this->params = $attributes;
 
     }
 
     /**
      * @param string $uri
      * @param string $method
+     * @param array $request
      * @return static
      */
-    public static function create($uri = '', $method = 'GET')
+    public static function create($uri = '', $method = 'GET', $request = [])
     {
         $server = array_replace(array(
             'SERVER_NAME' => 'localhost',
@@ -67,17 +72,48 @@ class Request
 
         return new static(
             $server['REQUEST_URI'],
-            $method
+            $method,
+            empty($request) ? $_REQUEST : $request
         );
     }
 
     /**
      * @return string
      */
-    public
-    function getUri()
+    public function getUri()
     {
         return $this->uri;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPath()
+    {
+        $uri = $this->getUri();
+
+        if (strpos($uri, '?')) {
+            return explode('?', $uri)[0];
+        }
+
+        return $uri;
+    }
+
+    /**
+     * @return array
+     */
+    public function getParams()
+    {
+        return $this->params;
+    }
+
+    /**
+     * @param array $params
+     * @return array
+     */
+    public function setParams(array $params)
+    {
+        return $this->params = $params;
     }
 
     /**
@@ -85,8 +121,7 @@ class Request
      *
      * @return string
      */
-    public
-    function ip()
+    public function ip()
     {
         return $this->getIp();
     }
@@ -96,8 +131,7 @@ class Request
      * @param null $value
      * @return null
      */
-    public
-    function header($key, $value = null)
+    public function header($key, $value = null)
     {
         if (null !== $value) {
             // We are setting a header
@@ -112,8 +146,7 @@ class Request
      * @param null $value
      * @return null
      */
-    public
-    function server($key, $value = null)
+    public function server($key, $value = null)
     {
         if (null !== $value) {
             // We are setting a header
@@ -126,10 +159,24 @@ class Request
     /**
      * @return bool
      */
-    public
-    function isAjax()
+    public function isAjax()
     {
         return array_key_exists('HTTP_X_REQUESTED_WITH', $_SERVER) && $this->server('HTTP_X_REQUESTED_WITH') === 'XMLHttpRequest';
+    }
+
+    /**
+     * @param $uri
+     * @return string
+     */
+    protected function renderUri($uri)
+    {
+        $uri = rtrim($uri, '/');
+
+        if (mb_stripos($uri, '/index.php') === 0) {
+            $uri = mb_substr($uri, 10);
+        }
+
+        return rawurldecode($uri);
     }
 
     /**
@@ -138,8 +185,7 @@ class Request
      * @return array|mixed
      * @throws \RuntimeException
      */
-    protected
-    function getIp()
+    protected function getIp()
     {
         if (!empty($this->header('HTTP_X_FORWARDED_FOR'))) {
 

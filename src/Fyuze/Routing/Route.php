@@ -2,6 +2,7 @@
 namespace Fyuze\Routing;
 
 use Closure;
+use Fyuze\Http\Request;
 use InvalidArgumentException;
 
 class Route
@@ -63,21 +64,13 @@ class Route
     }
 
     /**
-     * @return array
-     */
-    public function getParams()
-    {
-        return [];
-    }
-
-    /**
      * Check if route matches given url
      *
      * @param $url
      * @return bool
      */
-    public function matches($url)
+    public function matches(Request $request)
     {
-        return (new Matcher($this, $url))->resolves();
+        return (new Matcher($request, $this))->resolves();
     }
 }

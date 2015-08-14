@@ -147,7 +147,7 @@ abstract class Fyuze
         $routes = realpath($this->getPath() . '/app/routes.php');
 
         if (file_exists($routes)) {
-            include_once $routes;
+            require $routes;
         }
 
         return $router;

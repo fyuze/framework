@@ -22,7 +22,9 @@ class KernelApplicationWebTest extends PHPUnit_Framework_TestCase
     {
         $path = realpath(__DIR__ . '/../../mocks');
         $app = new \Fyuze\Kernel\Application\Web($path);
+        $_SERVER['REQUEST_URI'] = '/foobar';
         $response = $app->boot();
+        unset($_SERVER['REQUEST_URI']);
 
         $this->assertInstanceOf('Fyuze\Http\Response', $response);
         $this->assertEquals(404, $response->getStatusCode());
@@ -39,6 +41,6 @@ class KernelApplicationWebTest extends PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('Fyuze\Http\Response', $response);
         $this->assertEquals(500, $response->getStatusCode());
-        // $this->assertEquals('Hi', $response->getContent());
+        $this->assertEquals('An error occurred', $response->getBody());
     }
 }
