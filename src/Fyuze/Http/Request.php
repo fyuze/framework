@@ -67,7 +67,7 @@ class Request
             'REMOTE_ADDR' => '127.0.0.1',
             'SERVER_PROTOCOL' => 'HTTP/1.1',
             'REQUEST_TIME' => time(),
-            'REQUEST_URI' => $uri
+            'REQUEST_URI' => $uri,
         ), $_SERVER);
 
         return new static(
@@ -92,8 +92,8 @@ class Request
     {
         $uri = $this->getUri();
 
-        if (strpos($uri, '?')) {
-            return explode('?', $uri)[0];
+        if (strpos($uri, '?') == true) {
+            return parse_url($uri, PHP_URL_PATH);
         }
 
         return $uri;

@@ -19,7 +19,7 @@ class HttpRequestTest extends PHPUnit_Framework_TestCase
     }
 
     public function testResolvesQueryString() {
-        $request = Request::create('/foo?bar=baz');
+        $request = Request::create('/index.php/foo?bar=baz');
         $this->assertEquals('/foo', $request->getPath());
         $this->assertEquals('/foo?bar=baz', $request->getUri());
     }
