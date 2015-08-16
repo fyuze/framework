@@ -63,6 +63,10 @@ class Matcher
 
         $route = preg_replace('/{([a-z0-9_-]+)}/i', '(?P<$1>[^/]+)', $route);
 
+        if(substr($route, -1) === '/') {
+            $route .= '?';
+        }
+
         return "%^{$route}$%s";
     }
 }

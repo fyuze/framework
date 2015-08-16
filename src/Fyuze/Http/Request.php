@@ -6,14 +6,30 @@ use RuntimeException;
 class Request
 {
     /**
+     * Server vars $_SERVER
+     *
+     * @var
+     */
+    protected $server;
+
+    /**
      * @var array
      */
     protected $headers = [];
 
     /**
-     * @var array
+     * Query string paramaters $_GET
+     *
+     * @var
      */
-    protected $params = [];
+    protected $params;
+
+    /**
+     * User input $_POST
+     *
+     * @var
+     */
+    protected $input;
 
     /**
      * @var
@@ -28,36 +44,31 @@ class Request
     protected $uri;
 
     /**
+     * @var string
+     */
+    protected $path;
+
+    /**
      * @var
      */
     protected $method;
 
     /**
-     * @var
+     * @param $server
+     * @param $params
+     * @param $input
      */
-    protected $route;
-
-    /**
-     * @param $uri
-     * @param string $method
-     * @param array $attributes
-     */
-    public function __construct($uri, $method = 'GET', array $attributes = [])
+    public function __construct($server, $params, $input)
     {
-        $this->uri = $this->renderUri($uri);
-        //$this->headers = $this->getHeaders();
-        $this->ip = $this->getIp();
-        $this->params = $attributes;
-
+        $this->bootstrap($server, $params, $input);
     }
 
     /**
      * @param string $uri
      * @param string $method
-     * @param array $request
      * @return static
      */
-    public static function create($uri = '', $method = 'GET', $request = [])
+    public static function create($uri = '/', $method = 'GET')
     {
         $server = array_replace(array(
             'SERVER_NAME' => 'localhost',
@@ -68,35 +79,56 @@ class Request
             'SERVER_PROTOCOL' => 'HTTP/1.1',
             'REQUEST_TIME' => time(),
             'REQUEST_URI' => $uri,
+            'REQUEST_METHOD' => $method
         ), $_SERVER);
 
         return new static(
-            $server['REQUEST_URI'],
-            $method,
-            empty($request) ? $_REQUEST : $request
+            $server,
+            $_GET,
+            $_POST
         );
     }
 
     /**
-     * @return string
+     * @param $server
+     * @param $params
+     * @param $input
      */
-    public function getUri()
+    protected function bootstrap($server, $params, $input)
     {
-        return $this->uri;
+        $this->server = $server;
+        $this->params = $params;
+        $this->input = $input;
+        $this->headers = $this->getHeaders();
+
+        $this->uri = $this->renderUri($server['REQUEST_URI']);
+        $this->method = $server['REQUEST_METHOD'];
     }
 
     /**
-     * @return string
+     * @param $key
+     * @param null $value
+     * @return null
      */
-    public function getPath()
+    public function server($key, $value = null)
     {
-        $uri = $this->getUri();
-
-        if (strpos($uri, '?') == true) {
-            return parse_url($uri, PHP_URL_PATH);
+        if (null !== $value) {
+            return $this->server[$key] = $value;
         }
 
-        return $uri;
+        return $this->server[$key];
+    }
+
+    /**
+     * @return array
+     */
+    public function getHeaders()
+    {
+        if (count($this->headers)) {
+            return $this->headers;
+        }
+
+        return $this->headers;
     }
 
     /**
@@ -117,6 +149,40 @@ class Request
     }
 
     /**
+     * @return string
+     */
+    public function getUri()
+    {
+        return $this->uri;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPath()
+    {
+        $uri = $this->getUri();
+
+        if (mb_stripos($uri, '/index.php') === 0) {
+            $uri = str_replace('/index.php', '', $uri);
+        }
+
+        if (strpos($uri, '?') !== false) {
+            return explode('?', $uri)[0];
+        }
+
+        return ($uri === '') ? '/' : $uri;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function input()
+    {
+        return $this->input;
+    }
+
+    /**
      * Get the users ip
      *
      * @return string
@@ -134,34 +200,20 @@ class Request
     public function header($key, $value = null)
     {
         if (null !== $value) {
-            // We are setting a header
             return $this->headers[$key] = $value;
         }
 
         return array_key_exists($key, $this->headers) ? $this->headers[$key] : null;
     }
 
-    /**
-     * @param $key
-     * @param null $value
-     * @return null
-     */
-    public function server($key, $value = null)
-    {
-        if (null !== $value) {
-            // We are setting a header
-            return $_SERVER[$key] = $value;
-        }
-
-        return $_SERVER[$key];
-    }
 
     /**
      * @return bool
      */
     public function isAjax()
     {
-        return array_key_exists('HTTP_X_REQUESTED_WITH', $_SERVER) && $this->server('HTTP_X_REQUESTED_WITH') === 'XMLHttpRequest';
+        return array_key_exists('HTTP_X_REQUESTED_WITH',
+            $this->server) && $this->server('HTTP_X_REQUESTED_WITH') === 'XMLHttpRequest';
     }
 
     /**
@@ -171,10 +223,6 @@ class Request
     protected function renderUri($uri)
     {
         $uri = rtrim($uri, '/');
-
-        if (mb_stripos($uri, '/index.php') === 0) {
-            $uri = mb_substr($uri, 10);
-        }
 
         return rawurldecode($uri);
     }
@@ -196,10 +244,10 @@ class Request
         if (!isset($ip)) {
 
             $filter = array_filter(['HTTP_CLIENT_IP', 'HTTP_X_CLUSTER_CLIENT_IP', 'REMOTE_ADDR'], function ($key) {
-                return array_key_exists($key, $_SERVER);
+                return array_key_exists($key, $this->server);
             });
 
-            $ip = count($filter) ? $_SERVER[reset($filter)] : null;
+            $ip = count($filter) ? $this->server[reset($filter)] : null;
         }
 
         return (false !== filter_var($ip, FILTER_VALIDATE_IP)) ? $ip : '127.0.0.1';

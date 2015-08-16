@@ -4,22 +4,42 @@ use Fyuze\Http\Request;
 
 class HttpRequestTest extends PHPUnit_Framework_TestCase
 {
-    public function testResolvesFromGlobals()
+    public function tearDown()
     {
-        $_SERVER['REQUEST_URI'] = '/index.php/foo';
+        unset($_SERVER['REQUEST_URI']);
+        parent::tearDown();
+    }
+
+    public function testResolvesFromGlobalsx()
+    {
+        $_SERVER['REQUEST_URI'] = '/index.php';
         $request = Request::create();
 
-        $this->assertEquals('/foo', $request->getUri());
-        unset($_SERVER['REQUEST_URI']);
+        $this->assertEquals('/index.php', $request->getUri());
+        $this->assertEquals('/', $request->getPath());
+
+    }
+
+    public function testResolvesFromGlobalsWithIndex()
+    {
+        $_SERVER['REQUEST_URI'] = '/index.php/foo?bar=baz';
+        $request = Request::create();
+
+        $this->assertEquals('/index.php/foo?bar=baz', $request->getUri());
+        $this->assertEquals('/foo', $request->getPath());
+
     }
 
     public function testResolvesDefinedUrl()
     {
-        $this->assertEquals('/foo', Request::create('/foo')->getUri());
+        $request = Request::create('/');
+        //$this->assertEquals('/', $request->getUri());
+        $this->assertEquals('/', $request->getPath());
     }
 
-    public function testResolvesQueryString() {
-        $request = Request::create('/index.php/foo?bar=baz');
+    public function testResolvesQueryString()
+    {
+        $request = Request::create('/foo?bar=baz');
         $this->assertEquals('/foo', $request->getPath());
         $this->assertEquals('/foo?bar=baz', $request->getUri());
     }

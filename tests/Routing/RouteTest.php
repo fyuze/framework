@@ -16,6 +16,33 @@ class RouteTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('Hello', call_user_func($route->getAction()));
     }
 
+    public function testResolvesFromRootRoute()
+    {
+        $request = Request::create('/?test=1');
+        $route = new Route('/', 'index', 'TestController@indexAction');
+
+        $this->assertTrue($route->matches($request));
+        $this->assertEquals('/?test=1', $request->getUri());
+        $this->assertEquals('/', $request->getPath());
+    }
+
+    public function testResolvesWithIndexFile()
+    {
+        $request = Request::create('/index.php/?test=1');
+        $route = new Route('/', 'index', 'TestController@indexAction');
+
+        $this->assertTrue($route->matches($request));
+        $this->assertEquals('/index.php/?test=1', $request->getUri());
+        $this->assertEquals('/', $request->getPath());
+    }
+
+    public function testResolvesWithTrailingSlash() {
+        $request = Request::create('/index.php/');
+        $route = new Route('/', 'index', 'TestController@indexAction');
+
+        $this->assertTrue($route->matches($request));
+    }
+
     public function testControllerRoute()
     {
         $route = new Route('/', 'index', 'TestController@indexAction');
