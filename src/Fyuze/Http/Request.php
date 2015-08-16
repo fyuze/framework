@@ -83,9 +83,7 @@ class Request
         ), $_SERVER);
 
         return new static(
-            $server,
-            $_GET,
-            $_POST
+            $server, $_GET, $_POST
         );
     }
 
@@ -126,6 +124,12 @@ class Request
     {
         if (count($this->headers)) {
             return $this->headers;
+        }
+
+        foreach ($this->server as $key => $value) {
+            if (!is_array($key) && strpos($key, 'HTTP_') !== false) {
+                $this->headers[substr($key, 5)] = $value;
+            }
         }
 
         return $this->headers;
@@ -175,11 +179,25 @@ class Request
     }
 
     /**
-     * @return mixed
+     * @param null $key
+     * @param null $value
+     * @return null
      */
-    public function input()
+    public function input($key = null, $value = null)
     {
-        return $this->input;
+        if ($key === null) {
+            return $this->input;
+        }
+
+        if (!array_key_exists($key, $this->input)) {
+            return ($value === null) ? null : $this->input[$key] = $value;
+        }
+
+        if ($value !== null) {
+            return $this->input[$key] = $value;
+        }
+
+        return $this->input[$key];
     }
 
     /**
@@ -200,10 +218,14 @@ class Request
     public function header($key, $value = null)
     {
         if (null !== $value) {
-            return $this->headers[$key] = $value;
+            return $this->headers[strtoupper($key)] = $value;
         }
 
-        return array_key_exists($key, $this->headers) ? $this->headers[$key] : null;
+        foreach($this->headers as $_key => $_value) {
+            if(stripos($_key, $key) !== false) {
+                return $this->headers[$_key];
+            }
+        }
     }
 
 

@@ -10,14 +10,13 @@ class HttpRequestTest extends PHPUnit_Framework_TestCase
         parent::tearDown();
     }
 
-    public function testResolvesFromGlobalsx()
+    public function testResolvesFromGlobals()
     {
         $_SERVER['REQUEST_URI'] = '/index.php';
         $request = Request::create();
 
         $this->assertEquals('/index.php', $request->getUri());
         $this->assertEquals('/', $request->getPath());
-
     }
 
     public function testResolvesFromGlobalsWithIndex()
@@ -27,7 +26,6 @@ class HttpRequestTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals('/index.php/foo?bar=baz', $request->getUri());
         $this->assertEquals('/foo', $request->getPath());
-
     }
 
     public function testResolvesDefinedUrl()
@@ -35,6 +33,32 @@ class HttpRequestTest extends PHPUnit_Framework_TestCase
         $request = Request::create('/');
         //$this->assertEquals('/', $request->getUri());
         $this->assertEquals('/', $request->getPath());
+    }
+
+    public function testGetsHttpHeaders()
+    {
+        $request = Request::create();
+        $this->assertEquals(2, count($request->getHeaders()));
+        $this->assertEquals('localhost', $request->header('host'));
+
+        $request->header('host', 'fyuze');
+        $this->assertEquals('fyuze', $request->header('host'));
+
+    }
+
+    public function testResolvesUserInput()
+    {
+        $_POST['foo'] = 'bar';
+        $request = Request::create();
+
+        $this->assertArrayHasKey('foo', $request->input());
+        $this->assertNull($request->input('bar'));
+        $this->assertEquals('bar', $request->input('foo'));
+
+        $request->input('bar', '');
+        $this->assertArrayHasKey('bar', $request->input());
+        $request->input('bar', 'baz');
+        $this->assertEquals('baz', $request->input('bar'));
     }
 
     public function testResolvesQueryString()
@@ -54,7 +78,6 @@ class HttpRequestTest extends PHPUnit_Framework_TestCase
 
         $request->header('HTTP_X_FORWARDED_FOR', '127.0.0.2,127.0.0.3');
         $this->assertEquals('127.0.0.3', $request->ip());
-
     }
 
     public function testDetectsXmlHttpRequest()
