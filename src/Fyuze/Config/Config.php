@@ -1,7 +1,6 @@
 <?php
 namespace Fyuze\Config;
 
-use Countable;
 use SplFileInfo;
 use GlobIterator;
 use InvalidArgumentException;
@@ -53,23 +52,24 @@ class Config
 
     /**
      * @param $key
-     * @param null $value
+     * @param null $default
      * @return mixed
      * @throws InvalidArgumentException
      */
-    public function get($key, $value = null)
+    public function get($key, $default = null)
     {
-        if (!array_key_exists($key, $this->configs) &&
-            $value === null
-        ) {
-            throw new InvalidArgumentException('Invalid configuration being accessed without a value.');
+        if (array_key_exists($key, $this->configs)) {
+            return $this->configs[$key];
         }
 
-        if (null !== $value) {
-            return $this->set($key, $value);
+        $configs = $this->configs;
+
+        foreach (explode('.', $key) as $value) {
+
+            $configs = array_key_exists($value, $configs) ? $configs[$value] : $default;
         }
 
-        return $this->configs[$key];
+        return $configs;
     }
 
     /**
@@ -83,10 +83,7 @@ class Config
     }
 
     /**
-     * @param $path
-     * @param $env
-     * @return array
-     * @throws InvalidArgumentException
+     *
      */
     protected function load()
     {
@@ -94,15 +91,12 @@ class Config
             throw new InvalidArgumentException(sprintf('The path you defined is not a valid directory: %s', $this->path));
         }
 
-
         foreach (new GlobIterator($this->path . '/*.*') as $file) {
 
             list($key, $value) = $this->getType($file);
 
             $this->configs[$key] = $value;
         }
-
-
     }
 
     /**
