@@ -25,7 +25,7 @@ class Registry
     public static function init()
     {
         if (self::$instance === null) {
-            return self::$instance = new static;
+            return static::$instance = new static;
         }
         return static::$instance;
     }
