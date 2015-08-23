@@ -38,7 +38,7 @@ class Kernel
 
         } catch (\Exception $e) {
 
-            return new Response('An error occurred', 500);
+            return new Response(sprintf('An unkown error has occurred: %s', $e->getMessage()), 500);
         }
     }
 }

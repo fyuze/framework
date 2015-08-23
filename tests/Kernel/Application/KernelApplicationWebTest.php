@@ -35,12 +35,12 @@ class KernelApplicationWebTest extends PHPUnit_Framework_TestCase
         $path = realpath(__DIR__ . '/../../mocks');
         $app = new \Fyuze\Kernel\Application\Web($path);
         $app->getContainer()->make('Fyuze\Routing\Collection')->get('/', 'error', function () {
-            throw new Exception;
+            throw new Exception('stuff broke');
         });
         $response = $app->boot();
 
         $this->assertInstanceOf('Fyuze\Http\Response', $response);
         $this->assertEquals(500, $response->getStatusCode());
-        $this->assertEquals('An error occurred', $response->getBody());
+        $this->assertEquals('An unkown error has occurred: stuff broke', $response->getBody());
     }
 }

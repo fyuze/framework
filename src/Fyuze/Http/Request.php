@@ -18,7 +18,7 @@ class Request
     protected $headers = [];
 
     /**
-     * Query string paramaters $_GET
+     * Query string parameters $_GET
      *
      * @var
      */
