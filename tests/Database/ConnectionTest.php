@@ -7,7 +7,9 @@ class ConnectionTest extends \PHPUnit_Framework_TestCase
     {
         $connection = new Connection([
             'driver' => 'sqlite',
-            'database' => ':memory:'
+            'database' => ':memory:',
+            'fetch' => 'PDO::FETCH_OBJ',
+            'charset' => 'UTF8'
         ]);
 
         $connection->query('SELECT 1');

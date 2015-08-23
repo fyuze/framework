@@ -19,10 +19,10 @@ class Factory
         switch ($config['driver']) {
             case 'mysql':
                 return new Mysql($config);
-                break;
+
             case 'sqlite':
                 return new Sqlite($config);
-                break;
+            
             default:
                 throw new InvalidArgumentException('Invalid or no driver specified');
         }

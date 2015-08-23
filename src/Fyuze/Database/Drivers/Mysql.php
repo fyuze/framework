@@ -23,9 +23,7 @@ class Mysql extends Driver
      */
     public function open()
     {
-        $dsn = $this->getDsn();
-
-        return new PDO($dsn, $this->config['username'], $this->config['password'], $this->config['options']);
+        return new PDO($this->getDsn(), $this->config['username'], $this->config['password'], $this->getOptions());
     }
 
     /**

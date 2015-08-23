@@ -27,7 +27,7 @@ class Sqlite extends Driver
             sprintf('sqlite:%s', $this->config['database']),
             null,
             null,
-            []
+            $this->getOptions()
         );
     }
 }
