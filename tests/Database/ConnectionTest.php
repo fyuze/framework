@@ -10,7 +10,6 @@ class ConnectionTest extends \PHPUnit_Framework_TestCase
             'database' => ':memory:'
         ]);
 
-
-        $connection->query('');
+        $connection->query('SELECT 1');
     }
 }

@@ -3,7 +3,7 @@ name: Fyuze
 timezone: UTC
 charset: UTF-8
 services:
- -
+ - 'Fyuze\Kernel\Services\Database'
 modules:
  -
 error_handler:

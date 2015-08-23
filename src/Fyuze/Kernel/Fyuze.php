@@ -105,6 +105,7 @@ abstract class Fyuze
     {
         $this->setupContainer();
         $this->configure();
+        $this->registerServices();
 
         $this->initialized = true;
     }
@@ -136,6 +137,15 @@ abstract class Fyuze
         mb_internal_encoding($this->charset);
 
         date_default_timezone_set($config['timezone']);
+    }
+
+    protected function registerServices()
+    {
+        foreach ($this->config->get('app.services') as $service) {
+            /** @var \Fyuze\Kernel\Service $obj */
+            $obj = new $service($this->container);
+            $obj->services();
+        }
     }
 
     /**
