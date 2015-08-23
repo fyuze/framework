@@ -3,18 +3,14 @@ use Fyuze\Database\Connection;
 
 class ConnectionTest extends \PHPUnit_Framework_TestCase
 {
-    public function testWorkingConnection()
+    public function testSqliteConnection()
     {
-        $connection = new Connection(['driver' => 'sqlite', 'database' => ':memory:']);
-        $this->assertInstanceOf('PDO', $connection->getPDO());
-        $this->assertEquals('sqlite', $connection->getDriver());
-    }
+        $connection = new Connection([
+            'driver' => 'sqlite',
+            'database' => ':memory:'
+        ]);
 
-    /**
-     * @expectedException RuntimeException
-     */
-    public function testFailingConnection()
-    {
-        new Connection();
+
+        $connection->query('');
     }
 }

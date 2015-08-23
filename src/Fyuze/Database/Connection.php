@@ -1,97 +1,47 @@
 <?php
 namespace Fyuze\Database;
 
-use PDO;
-use PDOException;
-use RuntimeException;
+use Fyuze\Database\Drivers\Factory;
+use Fyuze\Database\Drivers\ConnectionInterface;
 
 class Connection
 {
     /**
-     * @var \PDO
+     * @var Db
      */
-    protected $pdo;
+    protected $database;
 
     /**
-     * @param string $name
-     * @param array $info
+     * @var bool
      */
-    public function __construct(array $info = [])
-    {
-        try {
-            list($config, $options) = $this->parseInfo($info);
+    protected $connected = false;
 
-            $this->pdo = new PDO($config['dsn'], $config['username'], $config['password'], $options);
-        } catch (PDOException $e) {
-            throw new RuntimeException(sprintf("Failed to connect to the database. %s", $e->getMessage()));
-        }
+    /**
+     * @param array $config
+     */
+    public function __construct($config)
+    {
+        $this->initialize($config);
     }
 
     /**
+     * @param $config
+     */
+    protected function initialize($config)
+    {
+        /** @var ConnectionInterface $factory */
+        $driver = Factory::create($config);
+
+        $this->database = new Db($driver);
+    }
+
+    /**
+     * @param $method
+     * @param $params
      * @return mixed
      */
-    public function getDriver()
+    public function __call($method, $params)
     {
-        return $this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME);
-    }
-
-    /**
-     * @return PDO
-     */
-    public function getPDO()
-    {
-        return $this->pdo;
-    }
-
-    /**
-     * @param array $info
-     * @return array
-     */
-    protected function parseInfo(array $info = [])
-    {
-        return [
-            $this->buildConfig($info),
-            $this->buildOptions($info)
-        ];
-    }
-
-    /**
-     * @param $info
-     * @return array
-     */
-    protected function buildConfig($config)
-    {
-        $config = array_replace([
-            'driver' => null,
-            'username' => null,
-            'password' => null
-        ], $config);
-
-        switch ($config['driver']) {
-            case 'mysql':
-                $config['dsn'] = "mysql:dbname={$config['database']};host={$config['host']}";
-                break;
-            case 'sqlite':
-                $config['dsn'] = "sqlite:{$config['database']}";
-                break;
-            default:
-                $config['dsn'] = null;
-                break;
-        }
-
-        return $config;
-    }
-
-    /**
-     * @param $info
-     * @return array
-     */
-    protected function buildOptions($info)
-    {
-        return [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_PERSISTENT => array_key_exists('persistent', $info) ? $info['persistent'] : false,
-            PDO::ATTR_DEFAULT_FETCH_MODE => isset($info['fetch_mode']) ? $info['fetch_mode'] : PDO::FETCH_OBJ,
-        ];
+        return call_user_func_array([$this->database, $method], $params);
     }
 }
