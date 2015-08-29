@@ -9,6 +9,7 @@ class ViewTest extends PHPUnit_Framework_TestCase
         $view = new View(__DIR__ . '/../mocks/app/views/test.php');
 
         $this->assertEquals('Hello, World!', $view->render());
+        $this->assertEquals('Hello, World!', (string) $view);
     }
 
     public function testParsesHtmlWithPHP()
@@ -23,6 +24,13 @@ class ViewTest extends PHPUnit_Framework_TestCase
         $view = new View(__DIR__ . '/../mocks/app/views/params.php', ['user' => 'Matthew']);
 
         $this->assertEquals('Hello, Matthew', $view->render());
+    }
+
+    public function testCatchesExceptionThrownInView()
+    {
+        $view = new View(__DIR__ . '/../mocks/app/views/error.php');
+
+        $this->assertEquals('you shall not pass', (string) $view);
     }
 
     /**

@@ -1,6 +1,7 @@
 <?php
 namespace Fyuze\View;
 
+use Exception;
 use InvalidArgumentException;
 
 class View
@@ -33,5 +34,20 @@ class View
         include $this->view;
 
         return ob_get_clean();
+    }
+
+    /**
+     *
+     */
+    public function __toString()
+    {
+        try {
+            return $this->render();
+        } catch (Exception $e) {
+            // @todo have error handler rethrow exception
+            echo $e->getMessage();
+
+            return ob_get_clean();
+        }
     }
 }
