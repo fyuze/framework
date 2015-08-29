@@ -6,11 +6,6 @@ use PDO;
 class Sqlite extends Driver
 {
     /**
-     * @var array
-     */
-    protected $config;
-
-    /**
      * @param array $config
      */
     public function __construct(array $config = [])

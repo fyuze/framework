@@ -7,7 +7,17 @@ use InvalidArgumentException;
 class View
 {
     /**
-     * @param $view
+     * @var string
+     */
+    protected $view;
+
+    /**
+     * @var array
+     */
+    protected $params;
+
+    /**
+     * @param string $view
      * @param array $params
      * @throws InvalidArgumentException
      */

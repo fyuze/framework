@@ -5,6 +5,14 @@ use PDO;
 
 abstract class Driver implements ConnectionInterface
 {
+    /**
+     * @var array
+     */
+    protected $config;
+
+    /**
+     * @return array
+     */
     protected function getOptions()
     {
         return [

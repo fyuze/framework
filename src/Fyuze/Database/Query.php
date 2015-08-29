@@ -4,7 +4,7 @@ namespace Fyuze\Database;
 class Query
 {
     /**
-     * @var Connection
+     * @var Db
      */
     protected $db;
 

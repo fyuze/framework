@@ -6,11 +6,6 @@ use PDO;
 class Mysql extends Driver
 {
     /**
-     * @var array
-     */
-    protected $config;
-
-    /**
      * @param $config
      */
     public function __construct($config)
