@@ -1,5 +1,4 @@
 <?php
-// app/routing.php
 use Fyuze\Http\Response;
 
 $router->get('', 'testRoute', function () {
