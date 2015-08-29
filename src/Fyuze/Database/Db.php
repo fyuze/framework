@@ -1,6 +1,7 @@
 <?php
 namespace Fyuze\Database;
 
+use Exception;
 use Fyuze\Database\Drivers\ConnectionInterface;
 
 class Db
@@ -26,6 +27,59 @@ class Db
     }
 
     /**
+     * @param $sql
+     * @param array $params
+     * @return mixed
+     */
+    public function all($sql, array $params = [])
+    {
+        return $this->query($sql, $params)->fetchAll();
+    }
+
+    /**
+     * @param $sql
+     * @param array $params
+     * @return mixed
+     */
+    public function first($sql, array $params = [])
+    {
+        return $this->query($sql, $params)->fetch();
+    }
+
+    /**
+     * @param $name
+     * @return Query
+     */
+    public function table($name)
+    {
+        return new Query($this, $name);
+    }
+
+    /**
+     * @param \Closure $queries
+     * @return bool
+     */
+    public function transaction(\Closure $queries)
+    {
+        $this->connection->beginTransaction();
+
+        try {
+
+            $queries($this);
+
+            $this->connection->commit();
+
+            return true;
+
+        } catch (Exception $e) {
+
+            $this->connection->rollback();
+
+            return false;
+        }
+    }
+
+    /**
      * @param $query
      * @param array $params
      * @return mixed
@@ -36,11 +90,9 @@ class Db
 
         $result = $statement->execute($params);
 
-        $this->query = $statement;
-
         if ($this->isRead($query)) {
 
-            return $this;
+            return $statement;
 
         } elseif ($this->isWrite($query)) {
 
@@ -48,24 +100,6 @@ class Db
         }
 
         return $result;
-    }
-
-    /**
-     *
-     * @return array
-     */
-    public function all()
-    {
-        return $this->query->fetchAll();
-    }
-
-    /**
-     *
-     * @return mixed
-     */
-    public function first()
-    {
-        return $this->query->fetch();
     }
 
     /**

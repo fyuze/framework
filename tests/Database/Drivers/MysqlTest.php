@@ -1,4 +1,5 @@
 <?php
+
 use Fyuze\Database\Drivers\Mysql;
 
 class MysqlTest extends \PHPUnit_Framework_TestCase

@@ -1,4 +1,5 @@
 <?php
+
 use Fyuze\Database\Db;
 
 class DatabaseDbTest extends \PHPUnit_Framework_TestCase
@@ -25,7 +26,7 @@ class DatabaseDbTest extends \PHPUnit_Framework_TestCase
 
         $db = new Db($conn);
 
-        $first = $db->query('SELECT * FROM users WHERE name = ?', ['matthew'])->first();
+        $first = $db->first('SELECT * FROM users WHERE name = ?', ['matthew']);
         $this->assertEquals('matthew', $first->name);
     }
 
@@ -51,7 +52,7 @@ class DatabaseDbTest extends \PHPUnit_Framework_TestCase
 
         $db = new DB($conn);
 
-        $query = $db->query('SELECT * FROM users WHERE name = ?', ['matthew'])->all();
+        $query = $db->all('SELECT * FROM users WHERE name = ?', ['matthew']);
         $this->assertEquals(1, count($query));
     }
 
@@ -79,6 +80,62 @@ class DatabaseDbTest extends \PHPUnit_Framework_TestCase
 
         $query = $db->query('UPDATE users SET name = ? WHERE name = ?', ['bob', 'matthew']);
         $this->assertEquals(1, $query);
+    }
+
+    public function testSuccessfulDbTransaction()
+    {
+        $pdo = Mockery::mock('\PDO');
+        $pdo->shouldReceive('beginTransaction')->once()->andReturnNull();
+        $pdo->shouldReceive('prepare')->times(3)->andReturnSelf();
+        $pdo->shouldReceive('execute')->times(3)->andReturn(true);
+        $pdo->shouldReceive('commit')->once()->andReturn(true);
+
+        $conn = Mockery::mock('\Fyuze\Database\Drivers\ConnectionInterface');
+        $conn->shouldReceive('open')->once()->andReturn($pdo);
+
+        $db = new Db($conn);
+
+        $result = $db->transaction(function ($query) {
+            $query->query('INSERT INTO users (name) VALUES (matthew)');
+            $query->query('INSERT INTO users (name) VALUES (bob)');
+            $query->query('INSERT INTO users (name) VALUES (steve)');
+        });
+
+        $this->assertTrue($result);
+    }
+
+    public function testFailingDbTransaction()
+    {
+        $statement = Mockery::mock('\PDOStatement');
+        $statement->shouldReceive('execute')->once()->andThrow(new \Exception('woopsies'));
+
+        $pdo = Mockery::mock('\PDO');
+        $pdo->shouldReceive('beginTransaction')->once()->andReturnNull();
+        $pdo->shouldReceive('prepare')->times(3)->andReturn($statement);
+        $pdo->shouldReceive('execute')->times(3)->andReturn();
+        $pdo->shouldReceive('commit')->once()->andReturn();
+        $pdo->shouldReceive('rollBack')->once()->andReturn();
+
+        $conn = Mockery::mock('\Fyuze\Database\Drivers\ConnectionInterface');
+        $conn->shouldReceive('open')->once()->andReturn($pdo);
+
+        $db = new Db($conn);
+
+        $result = $db->transaction(function ($query) {
+            $query->first('SELECT 1');
+        });
+
+        $this->assertFalse($result);
+    }
+
+    public function testDatabaseResolvesBuilder()
+    {
+        $conn = Mockery::mock('\Fyuze\Database\Drivers\ConnectionInterface');
+        $conn->shouldReceive('open')->once()->andReturnSelf();
+
+        $db = new Db($conn);
+
+        $this->assertInstanceOf('Fyuze\Database\Query', $db->table('users'));
     }
 
     public function testNonReadOrWriteReturnsStatement()

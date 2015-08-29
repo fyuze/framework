@@ -1,4 +1,5 @@
 <?php
+
 use Fyuze\Database\Connection;
 
 class ConnectionTest extends \PHPUnit_Framework_TestCase
@@ -12,6 +13,6 @@ class ConnectionTest extends \PHPUnit_Framework_TestCase
             'charset' => 'UTF8'
         ]);
 
-        $connection->query('SELECT 1');
+        $connection->first('SELECT 1');
     }
 }
