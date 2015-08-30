@@ -21,7 +21,7 @@ class ConfigTest extends PHPUnit_Framework_TestCase
 
     public function testConfigParsesFile()
     {
-        $this->assertInstanceOf('Fyuze\Config\Configs', $this->config);
+        $this->assertInstanceOf('Fyuze\Config\Config', $this->config);
     }
 
     public function testConfigGetsKey()
