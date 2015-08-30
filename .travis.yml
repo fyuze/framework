@@ -17,8 +17,6 @@ notifications:
       - "irc.phpfreaks.com#help"
     on_success: always
     on_failure: always
-    use_notice: true
-    skip_join: true
 matrix:
   allow_failures:
     - php: 7.0
