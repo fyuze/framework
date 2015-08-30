@@ -16,7 +16,7 @@ notifications:
   -  irc:
       channels:
         - "irc.phpfreaks.com#help"
-      on_success: change
+      on_success: always
       on_failure: always
 matrix:
   allow_failures:
