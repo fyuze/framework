@@ -13,6 +13,11 @@ after_script:
   - php ocular.phar code-coverage:upload --format=php-clover coverage.clover
 notifications:
   - email: true
+  -  irc:
+      channels:
+        - "irc.phpfreaks.com#help"
+      on_success: change
+      on_failure: always
 matrix:
   allow_failures:
     - php: 7.0
