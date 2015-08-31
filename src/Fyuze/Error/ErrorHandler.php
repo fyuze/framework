@@ -17,10 +17,8 @@ class ErrorHandler implements ErrorHandling
     public function __construct()
     {
         register_shutdown_function($this->handleFatalError());
-
-        set_exception_handler(function ($exception) {
-            $this->handle($exception);
-        });
+        set_error_handler($this->setErrorHandler());
+        set_exception_handler($this->setExceptionHandler());
 
         $this->register('Exception', function ($exception) {
             echo $exception->getMessage();
@@ -48,11 +46,11 @@ class ErrorHandler implements ErrorHandling
     {
         try {
 
-            $handlers = array_filter($this->handlers, function($handler) use ($exception) {
+            $handlers = array_filter($this->handlers, function ($handler) use ($exception) {
                 return $exception instanceof $handler[0];
             });
 
-            foreach($handlers as $handler) {
+            foreach ($handlers as $handler) {
                 $error = $handler[1]($exception);
 
                 if ($error !== null) {
@@ -64,6 +62,30 @@ class ErrorHandler implements ErrorHandling
 
             echo sprintf('[%d] %s in %s', $e->getLine(), $e->getMessage(), $e->getFile());
         }
+    }
+
+    /**
+     * @return Closure
+     */
+    protected function setExceptionHandler()
+    {
+        return function ($exception) {
+            $this->handle($exception);
+        };
+    }
+
+    /**
+     * @return Closure
+     */
+    protected function setErrorHandler()
+    {
+        return function ($severity, $message, $file, $line) {
+            if (error_reporting() && $severity) {
+                throw new \ErrorException($message, 0, $severity, $file, $line);
+            }
+
+            return true;
+        };
     }
 
     /**
