@@ -2,6 +2,7 @@
 namespace Fyuze\Kernel;
 
 use Fyuze\Config\Config;
+use Fyuze\Error\ErrorHandler;
 use Fyuze\Routing\Collection;
 
 abstract class Fyuze
@@ -100,18 +101,23 @@ abstract class Fyuze
 
     /**
      * Initialize services
+     *
+     * return @void
      */
     protected function init()
     {
         $this->setupContainer();
         $this->configure();
         $this->registerServices();
+        $this->errorHandling();
 
         $this->initialized = true;
     }
 
     /**
+     * Registers container and some classes
      *
+     * @return void
      */
     protected function setupContainer()
     {
@@ -127,7 +133,9 @@ abstract class Fyuze
     }
 
     /**
+     * Sets up basic application configurations
      *
+     * @return void
      */
     protected function configure()
     {
@@ -137,8 +145,15 @@ abstract class Fyuze
         mb_internal_encoding($this->charset);
 
         date_default_timezone_set($config['timezone']);
+
+        $this->registerServices();
     }
 
+    /**
+     * Registers all defined services
+     *
+     * @return void
+     */
     protected function registerServices()
     {
         foreach ($this->config->get('app.services') as $service) {
@@ -149,7 +164,28 @@ abstract class Fyuze
     }
 
     /**
-     * @return mixed
+     * Registers error handler with container
+     * And converts all errors into ErrorExceptions
+     *
+     * @return void
+     */
+    protected function errorHandling()
+    {
+        $handler = new ErrorHandler();
+
+        $this->container->make($handler);
+
+        set_error_handler(function ($severity, $message, $file, $line) {
+            if (error_reporting() && $severity) {
+                throw new \ErrorException($message, 0, $severity, $file, $line);
+            }
+
+            return true;
+        });
+    }
+
+    /**
+     * @return Collection
      */
     protected function loadRoutes()
     {
