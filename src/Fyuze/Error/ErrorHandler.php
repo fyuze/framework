@@ -12,7 +12,7 @@ class ErrorHandler implements ErrorHandling
     protected $handlers = [];
 
     /**
-     *
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -47,13 +47,16 @@ class ErrorHandler implements ErrorHandling
     public function handle(Exception $exception)
     {
         try {
-            foreach ($this->handlers as $handler) {
-                if ($exception instanceof $handler[0]) {
-                    $error = $handler[1]($exception);
 
-                    if ($error !== null) {
-                        break;
-                    }
+            $handlers = array_filter($this->handlers, function($handler) use ($exception) {
+                return $exception instanceof $handler[0];
+            });
+
+            foreach($handlers as $handler) {
+                $error = $handler[1]($exception);
+
+                if ($error !== null) {
+                    break;
                 }
             }
 
@@ -65,6 +68,7 @@ class ErrorHandler implements ErrorHandling
 
     /**
      * @return Closure
+     * @codeCoverageIgnore
      */
     protected function handleFatalError()
     {
