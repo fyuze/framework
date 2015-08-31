@@ -22,8 +22,7 @@ class ErrorHandler implements ErrorHandling
             $this->handle($exception);
         });
 
-        $this->register('Exception', function($exception)
-        {
+        $this->register('Exception', function ($exception) {
             echo $exception->getMessage();
         });
     }
@@ -50,9 +49,9 @@ class ErrorHandler implements ErrorHandling
         try {
             foreach ($this->handlers as $handler) {
                 if ($exception instanceof $handler[0]) {
-                    $return = $handler[1]($exception);
+                    $error = $handler[1]($exception);
 
-                    if($return !== null) {
+                    if ($error !== null) {
                         break;
                     }
                 }
