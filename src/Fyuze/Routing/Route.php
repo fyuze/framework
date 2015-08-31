@@ -45,6 +45,7 @@ class Route
 
 
     /**
+     * @throws InvalidArgumentException
      * @return mixed Closure|Controller
      */
     public function getAction()
@@ -66,7 +67,7 @@ class Route
     /**
      * Check if route matches given url
      *
-     * @param $url
+     * @param Request $request
      * @return bool
      */
     public function matches(Request $request)

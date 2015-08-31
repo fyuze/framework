@@ -7,16 +7,9 @@ use Fyuze\Database\Drivers\ConnectionInterface;
 class Db
 {
     /**
-     * @var Connection
+     * @var \PDO
      */
     protected $connection;
-
-    /**
-     * Current query object
-     *
-     * @var \PDOStatement
-     */
-    protected $query;
 
     /**
      * @param ConnectionInterface $connection

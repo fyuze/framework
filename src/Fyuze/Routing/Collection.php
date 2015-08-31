@@ -20,6 +20,7 @@ class Collection
      * @param $route
      * @param $action
      * @param null $name
+     * @param array $options
      * @return Collection
      */
     public function get($route, $name, $action, $options = [])
@@ -31,6 +32,7 @@ class Collection
      * @param $route
      * @param $action
      * @param null $name
+     * @param array $options
      * @return Collection
      */
     public function post($route, $name, $action, $options = [])
@@ -39,10 +41,10 @@ class Collection
     }
 
     /**
-     * @param $methods
      * @param $route
      * @param $action
      * @param null $name
+     * @param array $options
      * @return $this
      */
     protected function add($route, $name, $action, $options = [])

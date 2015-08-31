@@ -41,7 +41,7 @@ class Router
      */
     protected function match(Request $request)
     {
-        return array_filter($this->routes->getRoutes(), function ($route) use ($request) {
+        return array_filter($this->routes->getRoutes(), function (Route $route) use ($request) {
             return $route->matches($request);
         });
     }
