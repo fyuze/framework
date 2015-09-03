@@ -50,6 +50,11 @@ class Kernel
         }
     }
 
+    /**
+     * @param $action
+     * @param $params
+     * @return mixed
+     */
     protected function resolve($action, $params)
     {
         if ($action instanceof \Closure) {
