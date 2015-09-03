@@ -71,6 +71,6 @@ class Kernel
             }
         }
 
-        return $reflect->getMethod($method)->invokeArgs(new $controller, $params);
+        return $reflect->getMethod($method)->invokeArgs($controller, $params);
     }
 }
