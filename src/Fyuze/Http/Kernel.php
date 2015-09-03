@@ -69,7 +69,7 @@ class Kernel
         $reflect = new ReflectionClass($controller);
 
         foreach ($reflect->getMethod($method)->getParameters() as $param) {
-            if ($class = $param->getClass()->getName()) {
+            if ($param->getClass() && $class = $param->getClass()->getName()) {
                 array_unshift($params, $this->registry->make($class));
             }
         }
