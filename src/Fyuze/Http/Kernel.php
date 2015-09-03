@@ -2,10 +2,16 @@
 namespace Fyuze\Http;
 
 use Fyuze\Http\Exception\NotFoundException;
+use Fyuze\Kernel\Registry;
 use Fyuze\Routing\Router;
 
 class Kernel
 {
+    /**
+     * @var Registry
+     */
+    protected $registry;
+
     /**
      *
      * @var Router
@@ -13,10 +19,12 @@ class Kernel
     protected $router;
 
     /**
+     * @param Registry $registry
      * @param Router $router
      */
-    public function __construct(Router $router)
+    public function __construct(Registry $registry, Router $router)
     {
+        $this->registry = $registry;
         $this->router = $router;
     }
 
@@ -27,10 +35,10 @@ class Kernel
     public function handle(Request $request)
     {
         try {
-            
+
             $route = $this->router->resolve($request);
 
-            return call_user_func_array($route->getAction(), $request->getParams());
+            return $this->resolve($route->getAction(), $request->getParams());
 
         } catch (NotFoundException $e) {
 
@@ -40,5 +48,24 @@ class Kernel
 
             return new Response(sprintf('An unkown error has occurred: %s', $e->getMessage()), 500);
         }
+    }
+
+    protected function resolve($action, $params)
+    {
+        if ($action instanceof \Closure) {
+            return $action($params);
+        }
+
+        list($controller, $method) = $action;
+
+        $reflect = new \ReflectionClass($controller);
+
+        foreach ($reflect->getMethod($method)->getParameters() as $param) {
+            if ($class = $param->getClass()->getName()) {
+                array_unshift($params, $this->registry->make($class));
+            }
+        }
+
+        return $reflect->getMethod($method)->invokeArgs(new $controller, $params);
     }
 }

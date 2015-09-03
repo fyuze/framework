@@ -17,7 +17,8 @@ class Web extends Fyuze
         // Get system is booting, load routes
         $routes = $this->loadRoutes();
 
-        $kernel = new Kernel(new Router($routes));
-        return $kernel->handle(Request::create());
+        $kernel = new Kernel($this->getContainer(), new Router($routes));
+
+        return $kernel->handle($this->container->make(Request::create()));
     }
 }

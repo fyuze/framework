@@ -8,14 +8,12 @@ class KernelApplicationWebTest extends PHPUnit_Framework_TestCase
     {
         $path = realpath(__DIR__ . '/../../mocks');
         $app = new \Fyuze\Kernel\Application\Web($path);
-        $app->getContainer()->make('Fyuze\Routing\Collection')->get('/', 'index', function () {
-            return new Response('Hello, World!');
-        });
+        $app->getContainer()->make('Fyuze\Routing\Collection')->get('/', 'index', 'HomeController@indexAction');
         $response = $app->boot();
 
         $this->assertInstanceOf('Fyuze\Http\Response', $response);
         $this->assertEquals(200, $response->getStatusCode());
-       // $this->assertEquals('Hi', $response->getBody());
+        $this->assertEquals('/', $response->getBody());
     }
 
     public function testWebApplicationThrows404s()
@@ -42,5 +40,12 @@ class KernelApplicationWebTest extends PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Fyuze\Http\Response', $response);
         $this->assertEquals(500, $response->getStatusCode());
         $this->assertEquals('An unkown error has occurred: stuff broke', $response->getBody());
+    }
+}
+
+
+class HomeController {
+    public function indexAction(\Fyuze\Http\Request $request) {
+        return new Response($request->getPath());
     }
 }
