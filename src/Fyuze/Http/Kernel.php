@@ -68,15 +68,25 @@ class Kernel
 
         $reflect = new ReflectionClass($controller);
 
-        foreach ($reflect->getMethod($method)->getParameters() as $param) {
-            if ($param->getClass() && $class = $param->getClass()->getName()) {
-                array_unshift($params, $this->registry->make($class));
-            }
+        foreach (array_filter($reflect->getMethod($method)->getParameters(), $this->getParams()) as $param) {
+            array_unshift($params, $this->registry->make(
+                $param->getClass()->getName()
+            ));
         }
 
         return $reflect->getMethod($method)->invokeArgs(
             $this->registry->make($controller),
             $params
         );
+    }
+
+    /**
+     * @return Closure
+     */
+    protected function getParams()
+    {
+        return function ($param) {
+            return $param->getClass();
+        };
     }
 }

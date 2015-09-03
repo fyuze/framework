@@ -86,14 +86,23 @@ class Registry
         $params = $constructor->getParameters();
 
         /** @var \ReflectionParameter $param */
-        foreach ($params as $param) {
-
-            if ($param->getClass() && $obj = $param->getClass()->getName()) {
-
-                array_unshift($params, $this->make($obj));
-            }
+        foreach(array_filter($params, $this->getParams()) as $param) {
+            array_unshift(
+                $params,
+                $this->make($param->getClass()->getName())
+            );
         }
 
         return $reflection->newInstanceArgs($params);
+    }
+
+    /**
+     * @return Closure
+     */
+    protected function getParams()
+    {
+        return function ($param) {
+            return $param->getClass();
+        };
     }
 }
