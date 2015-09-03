@@ -11,6 +11,8 @@ class KernelApplicationWebTest extends PHPUnit_Framework_TestCase
         $app->getContainer()->make('Fyuze\Routing\Collection')->get('/', 'index', 'HomeController@indexAction');
         $response = $app->boot();
 
+        $app->getContainer()->dump();
+
         $this->assertInstanceOf('Fyuze\Http\Response', $response);
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals('/', $response->getBody());
@@ -23,6 +25,8 @@ class KernelApplicationWebTest extends PHPUnit_Framework_TestCase
         $_SERVER['REQUEST_URI'] = '/foobar';
         $response = $app->boot();
         unset($_SERVER['REQUEST_URI']);
+
+        $app->getContainer()->dump();
 
         $this->assertInstanceOf('Fyuze\Http\Response', $response);
         $this->assertEquals(404, $response->getStatusCode());
@@ -45,6 +49,10 @@ class KernelApplicationWebTest extends PHPUnit_Framework_TestCase
 
 
 class HomeController {
+    protected $registry;
+    public function __construct(\Fyuze\Http\Request $registry) {
+        $this->registry = $registry;
+    }
     public function indexAction(\Fyuze\Http\Request $request) {
         return new Response($request->getPath());
     }

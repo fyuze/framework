@@ -61,7 +61,7 @@ class Route
             throw new InvalidArgumentException('Invalid controller specified');
         }
 
-        return [new $controller, $method];
+        return [$controller, $method];
     }
 
     /**

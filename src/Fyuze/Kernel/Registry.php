@@ -1,6 +1,8 @@
 <?php
 namespace Fyuze\Kernel;
 
+use ReflectionClass;
+
 class Registry
 {
     /**
@@ -38,30 +40,17 @@ class Registry
     {
         $key = is_object($member) ? get_class($member) : $member;
 
-        if (is_object($member)) {
-            return $this->register($member);
-        }
-
         if (array_key_exists($key, $this->members)) {
 
             return $this->members[$key];
         }
 
-        return $this->add($member);
-    }
-
-    /**
-     * @param $instance
-     * @return mixed|void
-     * @throws \InvalidArgumentException
-     */
-    protected function add($instance)
-    {
-        if (is_string($instance) && class_exists($instance)) {
-            return $this->create($instance);
+        if(is_object($member)) {
+            return $this->members[$key] = $member;
         }
 
-        throw new \InvalidArgumentException('You must provide a valid class name or object.');
+        return $this->create($key);
+
     }
 
     /**
@@ -78,15 +67,33 @@ class Registry
      */
     protected function create($class)
     {
-        return $this->members[$class] = new $class;
+        return $this->members[$class] = $this->resolve($class);
     }
 
     /**
-     * @param $instance
-     * @return mixed
+     * @param $class
+     * @return object
      */
-    protected function register($instance)
+    protected function resolve($class)
     {
-        return $this->members[get_class($instance)] = $instance;
+        $reflection = new ReflectionClass($class);
+
+        if(!$constructor = $reflection->getConstructor()) {
+
+            return new $class;
+        }
+
+        $params = $constructor->getParameters();
+
+        /** @var \ReflectionParameter $param */
+        foreach ($params as $param) {
+
+            if ($param->getClass() && $obj = $param->getClass()->getName()) {
+
+                array_unshift($params, $this->make($obj));
+            }
+        }
+
+        return $reflection->newInstanceArgs($params);
     }
 }

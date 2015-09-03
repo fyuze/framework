@@ -18,7 +18,7 @@ class KernelRegistryTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException ReflectionException
      */
     public function testMakeInvalidMember()
     {
@@ -42,9 +42,34 @@ class KernelRegistryTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($stub, $mock);
         $this->assertTrue($mock->is_true);
     }
+
+    public function testAutoResolvesTypeHints()
+    {
+        $registry = Registry::init();
+        $instance = $registry->make('RegistryWithDependencyStub');
+
+        $this->assertInstanceOf('RegistryDependencyStub', $instance->getStub());
+    }
 }
 
 
 class RegistryTestStub
 {
+}
+
+class RegistryDependencyStub
+{
+}
+
+class RegistryWithDependencyStub
+{
+    public function __construct(RegistryDependencyStub $stub)
+    {
+        $this->stub = $stub;
+    }
+
+    public function getStub()
+    {
+        return $this->stub;
+    }
 }

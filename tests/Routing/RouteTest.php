@@ -47,7 +47,7 @@ class RouteTest extends PHPUnit_Framework_TestCase
     {
         $route = new Route('/', 'index', 'TestController@indexAction');
 
-        $this->assertInstanceOf('TestController', $route->getAction()[0]);
+        $this->assertEquals('TestController', $route->getAction()[0]);
         $this->assertEquals('indexAction', $route->getAction()[1]);
     }
 
@@ -56,7 +56,7 @@ class RouteTest extends PHPUnit_Framework_TestCase
     {
         $route = new Route('/hello/{name}/{id}', 'index', 'TestController@helloAction');
 
-        $this->assertInstanceOf('TestController', $route->getAction()[0]);
+        $this->assertEquals('TestController', $route->getAction()[0]);
         $this->assertEquals('helloAction', $route->getAction()[1]);
         $this->assertTrue($route->matches(Request::create('/hello/bob/1')));
         $this->assertFalse($route->matches(Request::create('/')));
@@ -69,7 +69,7 @@ class RouteTest extends PHPUnit_Framework_TestCase
 
         list($controller, $method) = $route->getAction();
 
-        $this->assertInstanceOf('TestController', $controller);
+        $this->assertEquals('TestController', $controller);
         $this->assertEquals('helloAction', $method);
         $this->assertTrue($route->matches(Request::create('/foo')));
         $this->assertTrue($route->matches(Request::create('/foo/bar')));
@@ -77,7 +77,7 @@ class RouteTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($route->matches(Request::create('/')));
         $this->assertFalse($route->matches(Request::create('/foo/bar/baz/biz')));
 
-        $this->assertEquals('Hello, Matthew!', call_user_func_array([$controller, $method], ['Matthew']));
+        $this->assertEquals('Hello, Matthew!', call_user_func_array([new $controller, $method], ['Matthew']));
     }
 
     /**

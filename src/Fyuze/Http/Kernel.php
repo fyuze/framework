@@ -1,6 +1,8 @@
 <?php
 namespace Fyuze\Http;
 
+use Closure;
+use ReflectionClass;
 use Fyuze\Http\Exception\NotFoundException;
 use Fyuze\Kernel\Registry;
 use Fyuze\Routing\Router;
@@ -57,13 +59,14 @@ class Kernel
      */
     protected function resolve($action, $params)
     {
-        if ($action instanceof \Closure) {
+        if ($action instanceof Closure) {
+
             return $action($params);
         }
 
         list($controller, $method) = $action;
 
-        $reflect = new \ReflectionClass($controller);
+        $reflect = new ReflectionClass($controller);
 
         foreach ($reflect->getMethod($method)->getParameters() as $param) {
             if ($class = $param->getClass()->getName()) {
@@ -71,6 +74,9 @@ class Kernel
             }
         }
 
-        return $reflect->getMethod($method)->invokeArgs($controller, $params);
+        return $reflect->getMethod($method)->invokeArgs(
+            $this->registry->make($controller),
+            $params
+        );
     }
 }

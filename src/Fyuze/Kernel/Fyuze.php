@@ -122,8 +122,8 @@ abstract class Fyuze
     protected function setupContainer()
     {
         $container = Registry::init();
-        $container->make($container);
         $container->make($this);
+        $container->make($container);
 
         $this->config = new Config($this->getConfigPath(), 'prod');
 
