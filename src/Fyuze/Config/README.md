@@ -5,7 +5,7 @@ This is the config component used by fyuze. It provides an easy way to process s
 ## Notes
 
 This documentation is a small excerpt of the [original]() and is purely used for demonstrating usage 
-outside the framework. Also, be sure to remember that this component converts all errors into [ErrorExecptions](http://php.net/ErrorException).
+outside the framework.
 
 ## Usage
 
