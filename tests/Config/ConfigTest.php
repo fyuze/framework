@@ -46,6 +46,11 @@ class ConfigTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('def', $this->config->get('abc'));
     }
 
+    public function testConfigSetsValueWithDotNotation()
+    {
+        $this->config->set('foo.bar', 'baz');
+        $this->assertEquals('baz', $this->config->get('foo.bar'));
+    }
     /**
      * @expectedException InvalidArgumentException
      */

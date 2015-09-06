@@ -79,7 +79,13 @@ class Config
      */
     public function set($key, $value)
     {
-        return $this->configs[$key] = $value;
+        $configs = &$this->configs;
+
+        foreach (explode('.', $key) as $segment) {
+            $configs = &$configs[$segment];
+        }
+
+        return $this->configs[$key] = $configs = $value;
     }
 
     /**
