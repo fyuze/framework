@@ -3,6 +3,7 @@ namespace Fyuze\Error;
 
 use Closure;
 use Exception;
+use ErrorException;
 
 class ErrorHandler implements ErrorHandling
 {
@@ -20,7 +21,7 @@ class ErrorHandler implements ErrorHandling
         set_error_handler($this->setErrorHandler());
         set_exception_handler($this->setExceptionHandler());
 
-        $this->register('Exception', function ($exception) {
+        $this->register('Exception', function (Exception $exception) {
             echo $exception->getMessage();
         });
     }
@@ -76,12 +77,13 @@ class ErrorHandler implements ErrorHandling
 
     /**
      * @return Closure
+     * @throws ErrorException
      */
     protected function setErrorHandler()
     {
         return function ($severity, $message, $file, $line) {
             if (error_reporting() && $severity) {
-                throw new \ErrorException($message, 0, $severity, $file, $line);
+                throw new ErrorException($message, 0, $severity, $file, $line);
             }
 
             return true;
@@ -98,7 +100,7 @@ class ErrorHandler implements ErrorHandling
             $error = error_get_last();
 
             if ($error['type'] === E_ERROR) {
-                $this->handle(new \ErrorException($error['message']));
+                $this->handle(new ErrorException($error['message']));
             }
         };
     }
