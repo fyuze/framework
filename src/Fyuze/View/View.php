@@ -2,6 +2,7 @@
 namespace Fyuze\View;
 
 use Exception;
+use Fyuze\Error\ErrorHandler;
 use InvalidArgumentException;
 
 class View
@@ -54,9 +55,11 @@ class View
         try {
             return $this->render();
         } catch (Exception $e) {
-            // @todo have error handler rethrow exception
-            echo $e->getMessage();
 
+            ob_end_clean();
+            ob_start();
+            $handler = new ErrorHandler();
+            $handler->handle($e);
             return ob_get_clean();
         }
     }
