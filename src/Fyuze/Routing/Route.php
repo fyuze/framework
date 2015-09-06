@@ -26,9 +26,8 @@ class Route
      * @param $uri
      * @param $name
      * @param $action
-     * @param array $options
      */
-    public function __construct($uri, $name, $action, $options = [])
+    public function __construct($uri, $name, $action)
     {
         $this->uri = $uri;
         $this->name = $name;
