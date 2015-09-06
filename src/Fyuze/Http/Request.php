@@ -1,8 +1,6 @@
 <?php
 namespace Fyuze\Http;
 
-use RuntimeException;
-
 class Request
 {
     /**
@@ -253,7 +251,6 @@ class Request
      * Internal method for getting users ip
      *
      * @return array|mixed
-     * @throws \RuntimeException
      */
     protected function getIp()
     {
