@@ -4,9 +4,10 @@ timezone: UTC
 charset: UTF-8
 services:
  - 'Fyuze\Kernel\Services\Database'
+ - 'Fyuze\Kernel\Services\Logger'
 modules:
  -
 error_handler:
- - log_errors: true
- - log_prefix: fyuze
- - log_frequency: daily
+ log_errors: true
+ log_prefix: fyuze
+ log_frequency: daily

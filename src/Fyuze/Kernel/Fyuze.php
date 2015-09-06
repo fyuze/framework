@@ -157,7 +157,12 @@ abstract class Fyuze
      */
     protected function registerServices()
     {
-        foreach ($this->config->get('app.services') as $service) {
+        $services = array_filter($this->config->get('app.services'), function($service) {
+            return class_exists($service);
+        });
+
+
+        foreach ($services as $service) {
             /** @var \Fyuze\Kernel\Service $obj */
             $obj = new $service($this->container);
             $obj->services();
