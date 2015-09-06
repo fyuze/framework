@@ -2,6 +2,7 @@
 namespace Fyuze\Kernel;
 
 use ReflectionClass;
+use ReflectionParameter;
 
 class Registry
 {
@@ -101,7 +102,7 @@ class Registry
      */
     protected function getParams()
     {
-        return function ($param) {
+        return function (ReflectionParameter $param) {
             return $param->getClass();
         };
     }

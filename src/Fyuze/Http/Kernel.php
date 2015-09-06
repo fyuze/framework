@@ -3,6 +3,7 @@ namespace Fyuze\Http;
 
 use Closure;
 use ReflectionClass;
+use ReflectionParameter;
 use Fyuze\Http\Exception\NotFoundException;
 use Fyuze\Kernel\Registry;
 use Fyuze\Routing\Router;
@@ -85,7 +86,7 @@ class Kernel
      */
     protected function getParams()
     {
-        return function ($param) {
+        return function (ReflectionParameter $param) {
             return $param->getClass();
         };
     }
