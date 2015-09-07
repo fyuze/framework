@@ -12,12 +12,13 @@ class Database extends BaseService
      */
     public function services()
     {
-        $config = $this->registry->make('Fyuze\Config\Config')->get('database');
+        $this->registry->add('db', function () {
 
-        $default = $config['connections'][$config['default']];
+            $config = $this->registry->make('config')->get('database');
 
-        $this->registry->make(
-            new Db(Factory::create(array_merge($default, ['fetch' => $config['fetch']])))
-        );
+            $default = $config['connections'][$config['default']];
+
+            return new Db(Factory::create(array_merge($default, ['fetch' => $config['fetch']])));
+        });
     }
 }

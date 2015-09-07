@@ -4,6 +4,7 @@ namespace Fyuze\Error;
 use Closure;
 use Exception;
 use ErrorException;
+use Fyuze\Error\Handlers\Exception as ExceptionHandler;
 
 class ErrorHandler implements ErrorHandling
 {
@@ -22,7 +23,8 @@ class ErrorHandler implements ErrorHandling
         set_exception_handler($this->setExceptionHandler());
 
         $this->register('Exception', function (Exception $exception) {
-            echo $exception->getMessage();
+            $handler = new ExceptionHandler($exception);
+            $handler->display();
         });
     }
 

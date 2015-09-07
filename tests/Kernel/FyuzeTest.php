@@ -17,13 +17,16 @@ class KernelFyuzeTest extends \PHPUnit_Framework_TestCase
         //$this->assertTrue($app->isCli());
     }
 
-    public function testLoggingService()
+    public function testServiceRegistration()
     {
         $app = (new Web(realpath(__DIR__ . '/../mocks')));
-        $app->getContainer()->make('Fyuze\Config\Config')->set('app.error_handler.log_errors', false);
+        $app->getContainer()->make('config')->set('app.error_handler.log_errors', false);
 
         $app->boot();
 
-        $this->assertInstanceOf('Fyuze\Kernel\Registry', $app->getContainer());
+        $container = $app->getContainer();
+
+        $this->assertInstanceOf('Fyuze\Database\Db', $container->make('db'));
+        $this->assertInstanceOf('Fyuze\Log\Logger', $container->make('logger'));
     }
 }

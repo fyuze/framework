@@ -19,6 +19,10 @@ class Web extends Fyuze
 
         $kernel = new Kernel($this->getContainer(), new Router($routes));
 
-        return $kernel->handle($this->container->make(Request::create()));
+        $this->container->add('request', function() {
+            return Request::create();
+        });
+
+        return $kernel->handle($this->container->make('request'));
     }
 }

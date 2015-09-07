@@ -11,13 +11,13 @@ class Logger extends BaseService
      */
     public function services()
     {
-        $config = $this->registry->make('Fyuze\Config\Config')->get('app.error_handler');
+        $config = $this->registry->make('config')->get('app.error_handler');
 
         if ($config['log_errors'] === true) {
 
-            $this->registry->make(
-                new BaseLogger($config['log_prefix'])
-            );
+            $this->registry->add('logger', function () use ($config) {
+                return new BaseLogger($config['log_prefix']);
+            });
         }
     }
 }

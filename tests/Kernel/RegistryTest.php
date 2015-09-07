@@ -10,11 +10,24 @@ class KernelRegistryTest extends \PHPUnit_Framework_TestCase
         $registry->dump();
     }
 
-    public function testSingleton()
+    public function testRegistryIsSingleton()
     {
         $registry = Registry::init();
         $this->assertInstanceOf('Fyuze\Kernel\Registry', $registry);
         $this->assertSame($registry, Registry::init());
+    }
+
+    public function testRegistryCreatesMemberWithAlias()
+    {
+        $registry = Registry::init();
+        $registry->add('test', function ($registry) {
+            $class = new StdClass;
+            $class->foo = 'bar';
+            return $class;
+        });
+
+        $obj = $registry->make('test');
+        $this->assertEquals('bar', $obj->foo);
     }
 
     /**
@@ -29,8 +42,7 @@ class KernelRegistryTest extends \PHPUnit_Framework_TestCase
     public function testMakeClassFromString()
     {
         $registry = Registry::init();
-        $mock = $registry->make('RegistryTestStub');
-        $this->assertSame($mock, $registry->make('RegistryTestStub'));
+        $this->assertInstanceOf('RegistryTestStub', $registry->make('RegistryTestStub'));
     }
 
     public function testMakeClassFromObject()

@@ -1,6 +1,7 @@
 <?php
 namespace Fyuze\Kernel;
 
+use Closure;
 use ReflectionClass;
 use ReflectionParameter;
 
@@ -14,7 +15,7 @@ class Registry
     protected static $instance = null;
 
     /**
-     * Registerd services
+     * Registered services
      *
      * @var array
      */
@@ -34,7 +35,16 @@ class Registry
     }
 
     /**
-     * @param $member
+     * @param string $alias
+     * @param mixed $member
+     */
+    public function add($alias, $member)
+    {
+        $this->members[$alias] = $member;
+    }
+
+    /**
+     * @param string $member
      * @return mixed|void
      */
     public function make($member)
@@ -42,16 +52,27 @@ class Registry
         $key = is_object($member) ? get_class($member) : $member;
 
         if (array_key_exists($key, $this->members)) {
-
-            return $this->members[$key];
+            $class = $this->members[$member];
+            if ($class instanceof Closure) {
+                return $this->members[$member] = $class($this);
+            }
+            return $this->members[$member] = $class;
         }
 
-        if(is_object($member)) {
+        if (is_object($member)) {
+
             return $this->members[$key] = $member;
         }
 
-        return $this->create($key);
+        $aliases = array_filter($this->members, function ($n) use ($member) {
+            return $n instanceof $member;
+        });
 
+        if(count($aliases)) {
+           return reset($aliases);
+        }
+
+        return $this->members[$key] = $this->resolve($key);
     }
 
     /**
@@ -64,30 +85,21 @@ class Registry
 
     /**
      * @param $class
-     * @return mixed
-     */
-    protected function create($class)
-    {
-        return $this->members[$class] = $this->resolve($class);
-    }
-
-    /**
-     * @param $class
      * @return object
      */
     protected function resolve($class)
     {
         $reflection = new ReflectionClass($class);
 
-        if(!$constructor = $reflection->getConstructor()) {
+        if (!$constructor = $reflection->getConstructor()) {
 
             return new $class;
         }
 
-        $params = $constructor->getParameters();
+        $params = array_filter($constructor->getParameters(), $this->getParams());
 
         /** @var \ReflectionParameter $param */
-        foreach(array_filter($params, $this->getParams()) as $param) {
+        foreach ($params as $param) {
             array_unshift(
                 $params,
                 $this->make($param->getClass()->getName())

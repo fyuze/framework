@@ -54,6 +54,8 @@ class Kernel
     }
 
     /**
+     * Method injection resolver
+     *
      * @param $action
      * @param $params
      * @return mixed

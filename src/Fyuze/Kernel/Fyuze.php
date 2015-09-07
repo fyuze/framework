@@ -122,13 +122,18 @@ abstract class Fyuze
     protected function setupContainer()
     {
         $container = Registry::init();
-        $container->make($this);
-        $container->make($container);
+        $container->add('app', $this);
+        $container->add('registry', $container);
 
-        $this->config = new Config($this->getConfigPath(), 'prod');
+        $container->add('config', function () {
+            return new Config($this->getConfigPath(), 'prod');
+        });
 
-        $container->make($this->config);
-        $container->make(new Collection());
+        $this->config = $container->make('config');
+
+        $container->add('routes', function () {
+            return new Collection();
+        });
 
         $this->container = $container;
     }
@@ -157,10 +162,9 @@ abstract class Fyuze
      */
     protected function registerServices()
     {
-        $services = array_filter($this->config->get('app.services'), function($service) {
+        $services = array_filter($this->config->get('app.services'), function ($service) {
             return class_exists($service);
         });
-
 
         foreach ($services as $service) {
             /** @var \Fyuze\Kernel\Service $obj */
@@ -179,7 +183,7 @@ abstract class Fyuze
     {
         $handler = new ErrorHandler();
 
-        $this->container->make($handler);
+        $this->container->add('error', $handler);
     }
 
     /**
@@ -187,7 +191,7 @@ abstract class Fyuze
      */
     protected function loadRoutes()
     {
-        $router = $this->container->make('Fyuze\Routing\Collection');
+        $router = $this->container->make('routes');
         $routes = realpath($this->getPath() . '/app/routes.php');
 
         if (file_exists($routes)) {
