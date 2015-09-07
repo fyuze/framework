@@ -15,7 +15,7 @@ class KernelApplicationWebTest extends PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('Fyuze\Http\Response', $response);
 
-        // $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals('/', $response->getBody());
     }
 
