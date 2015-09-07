@@ -52,11 +52,8 @@ class Registry
         $key = is_object($member) ? get_class($member) : $member;
 
         if (array_key_exists($key, $this->members)) {
-            $class = $this->members[$member];
-            if ($class instanceof Closure) {
-                return $this->members[$member] = $class($this);
-            }
-            return $this->members[$member] = $class;
+
+            return $this->locate($this->members[$member]);
         }
 
         if (is_object($member)) {
@@ -68,8 +65,8 @@ class Registry
             return $n instanceof $member;
         });
 
-        if(count($aliases)) {
-           return reset($aliases);
+        if (count($aliases)) {
+            return reset($aliases);
         }
 
         return $this->members[$key] = $this->resolve($key);
@@ -107,6 +104,19 @@ class Registry
         }
 
         return $reflection->newInstanceArgs($params);
+    }
+
+    /**
+     * @param $member
+     * @return mixed
+     */
+    protected function locate(&$member)
+    {
+        if ($member instanceof Closure) {
+            return $member = $member($this);
+        }
+
+        return $member;
     }
 
     /**
