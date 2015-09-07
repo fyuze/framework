@@ -31,6 +31,26 @@ class KernelRegistryTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * When we type hint a class, e.g Fyuze\Database\Db
+     * and have it bound to the key 'db'
+     * we still need to auto resolve from that key
+     */
+    public function testRegistryAutoResolvesBoundViaClosure()
+    {
+        $registry = Registry::init();
+
+        $foo = new Foo;
+
+        $registry->add('abcd', function ($registry) use ($foo) {
+            return $foo;
+        });
+
+        // Foo is type hinted and should resolve the instance we've provided
+        $test = $registry->make('RegistryWithOneDependency');
+        $this->assertSame($foo, $test->getFoo());
+    }
+
+    /**
      * @expectedException ReflectionException
      */
     public function testMakeInvalidMember()
@@ -42,46 +62,74 @@ class KernelRegistryTest extends \PHPUnit_Framework_TestCase
     public function testMakeClassFromString()
     {
         $registry = Registry::init();
-        $this->assertInstanceOf('RegistryTestStub', $registry->make('RegistryTestStub'));
+        $this->assertInstanceOf('Foo', $registry->make('Foo'));
     }
 
     public function testMakeClassFromObject()
     {
         $registry = Registry::init();
-        $stub = new RegistryTestStub();
+        $stub = new Foo();
         $stub->is_true = true;
         $mock = $registry->make($stub);
         $this->assertSame($stub, $mock);
         $this->assertTrue($mock->is_true);
     }
 
-    public function testAutoResolvesTypeHints()
+    public function testAutoResolvesSingleTypeHint()
     {
         $registry = Registry::init();
-        $instance = $registry->make('RegistryWithDependencyStub');
+        $instance = $registry->make('RegistryWithOneDependency');
 
-        $this->assertInstanceOf('RegistryDependencyStub', $instance->getStub());
+        $this->assertInstanceOf('Foo', $instance->getFoo());
+    }
+
+    public function testAutoResolvesMultipleTypeHints()
+    {
+        $registry = Registry::init();
+        $instance = $registry->make('RegistryWithMultipleDependencies');
+
+        $this->assertInstanceOf('Foo', $instance->getFoo());
+        $this->assertInstanceOf('Bar', $instance->getBar());
     }
 }
 
 
-class RegistryTestStub
+class Foo
 {
 }
 
-class RegistryDependencyStub
+class Bar
 {
 }
 
-class RegistryWithDependencyStub
+class RegistryWithOneDependency
 {
-    public function __construct(RegistryDependencyStub $stub)
+    public function __construct(Foo $foo)
     {
-        $this->stub = $stub;
+        $this->foo = $foo;
     }
 
-    public function getStub()
+    public function getFoo()
     {
-        return $this->stub;
+        return $this->foo;
+    }
+}
+
+class RegistryWithMultipleDependencies
+{
+    public function __construct(Foo $foo, Bar $bar)
+    {
+        $this->foo = $foo;
+        $this->bar = $bar;
+    }
+
+    public function getFoo()
+    {
+        return $this->foo;
+    }
+
+    public function getBar()
+    {
+        return $this->bar;
     }
 }

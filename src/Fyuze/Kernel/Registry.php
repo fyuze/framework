@@ -53,7 +53,7 @@ class Registry
 
         if (array_key_exists($key, $this->members)) {
 
-            return $this->locate($this->members[$member]);
+            return $this->build($this->members[$member]);
         }
 
         if (is_object($member)) {
@@ -61,15 +61,7 @@ class Registry
             return $this->members[$key] = $member;
         }
 
-        $aliases = array_filter($this->members, function ($n) use ($member) {
-            return $n instanceof $member;
-        });
-
-        if (count($aliases)) {
-            return reset($aliases);
-        }
-
-        return $this->members[$key] = $this->resolve($key);
+        return $this->locate($key, $member);
     }
 
     /**
@@ -96,11 +88,8 @@ class Registry
         $params = array_filter($constructor->getParameters(), $this->getParams());
 
         /** @var \ReflectionParameter $param */
-        foreach ($params as $param) {
-            array_unshift(
-                $params,
-                $this->make($param->getClass()->getName())
-            );
+        foreach ($params as &$param) {
+            $param = $this->make($param->getClass()->getName());
         }
 
         return $reflection->newInstanceArgs($params);
@@ -110,13 +99,38 @@ class Registry
      * @param $member
      * @return mixed
      */
-    protected function locate(&$member)
+    protected function build(&$member)
     {
         if ($member instanceof Closure) {
             return $member = $member($this);
         }
 
         return $member;
+    }
+
+    /**
+     * @param $key
+     * @param $member
+     * @return mixed|object
+     */
+    protected function locate($key, $member)
+    {
+        $aliases = array_filter($this->members, function (&$n) use ($member) {
+            if ($n instanceof Closure) {
+                return $n($this) instanceof $member;
+            }
+            return $n instanceof $member;
+        });
+
+        if (count($aliases)) {
+            $alias = reset($aliases);
+            if ($alias instanceof Closure) {
+                return $alias($this);
+            }
+            return $alias;
+        }
+
+        return $this->members[$key] = $this->resolve($key);
     }
 
     /**
