@@ -41,7 +41,11 @@ class Kernel
 
             $route = $this->router->resolve($request);
 
-            return $this->resolve($route->getAction(), $request->getParams());
+            $body = $this->resolve($route->getAction(), $request->getParams());
+
+            $this->registry->add('response', new Response($body));
+
+            return $this->registry->make('response');
 
         } catch (NotFoundException $e) {
 

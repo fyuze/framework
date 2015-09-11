@@ -103,6 +103,16 @@ class Response
     }
 
     /**
+     * Modify the response
+     *
+     * @param \Closure $closure
+     */
+    public function modify(\Closure $closure)
+    {
+        return $this->body = $closure($this->body);
+    }
+
+    /**
      * Sends the response
      * We ignore coverage here because
      * headers cannot be tested in cli sapi
