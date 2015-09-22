@@ -65,6 +65,11 @@ abstract class Fyuze
     protected $locale;
 
     /**
+     * @var array
+     */
+    protected $services = [];
+
+    /**
      * Initialize application
      *
      * @param string $path
@@ -108,8 +113,8 @@ abstract class Fyuze
     {
         $this->setupContainer();
         $this->configure();
-        $this->registerServices();
         $this->errorHandling();
+        $this->registerServices();
 
         $this->initialized = true;
     }
@@ -151,8 +156,6 @@ abstract class Fyuze
         mb_internal_encoding($this->charset);
 
         date_default_timezone_set($config['timezone']);
-
-        $this->registerServices();
     }
 
     /**
@@ -170,6 +173,8 @@ abstract class Fyuze
             /** @var \Fyuze\Kernel\Service $obj */
             $obj = new $service($this->container);
             $obj->services();
+
+            $this->services[] = $obj;
         }
     }
 
