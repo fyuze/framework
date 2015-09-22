@@ -17,6 +17,13 @@ class KernelRegistryTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($registry, Registry::init());
     }
 
+    public function testRegistryHasMethod() {
+        $registry = Registry::init();
+        $this->assertFalse($registry->has('foo'));
+        $registry->add('foo', function() { return 'bar'; });
+        $this->assertTrue($registry->has('foo'));
+    }
+
     public function testRegistryCreatesMemberWithAlias()
     {
         $registry = Registry::init();

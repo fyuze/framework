@@ -44,6 +44,15 @@ class Registry
     }
 
     /**
+     * @param $alias
+     * @return bool
+     */
+    public function has($alias)
+    {
+        return array_key_exists($alias, $this->members);
+    }
+
+    /**
      * @param string $member
      * @return mixed|void
      */
