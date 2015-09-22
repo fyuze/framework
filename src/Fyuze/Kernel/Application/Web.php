@@ -19,10 +19,18 @@ class Web extends Fyuze
 
         $kernel = new Kernel($this->getContainer(), new Router($routes));
 
-        $this->container->add('request', function() {
+        $this->container->add('request', function () {
             return Request::create();
         });
 
-        return $kernel->handle($this->container->make('request'));
+        $response = $kernel->handle($this->container->make('request'));
+
+        foreach ($this->services as $service) {
+            if (method_exists($service, 'bootstrap')) {
+                $service->bootstrap();
+            }
+        }
+
+        return $response;
     }
 }
