@@ -89,7 +89,7 @@ class Response
      */
     public function getStatusCode()
     {
-        return $this->code;
+        return (int) $this->code;
     }
 
     /**
@@ -126,6 +126,8 @@ class Response
         foreach ($this->headers as $key => $value) {
             header("$key: $value");
         }
+
+        http_response_code($this->getStatusCode());
 
         if ($this->body !== null) {
             if ($this->compression) {
