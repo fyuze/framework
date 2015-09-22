@@ -21,5 +21,8 @@
         <whitelist>
             <directory suffix=".php">./src</directory>
         </whitelist>
+        <blacklist>
+            <directory>./src/*/*/Resources</directory>
+        </blacklist>
     </filter>
 </phpunit>
