@@ -7,9 +7,18 @@ use Fyuze\Database\Drivers\ConnectionInterface;
 class Db
 {
     /**
+     * The pdo connection
+     *
      * @var \PDO
      */
     protected $connection;
+
+    /**
+     * The executed queries
+     *
+     * @var array
+     */
+    protected $queries = [];
 
     /**
      * @param ConnectionInterface $connection
@@ -17,6 +26,14 @@ class Db
     public function __construct(ConnectionInterface $connection)
     {
         $this->connection = $connection->open();
+    }
+
+    /**
+     * @return array
+     */
+    public function getQueries()
+    {
+        return $this->queries;
     }
 
     /**
@@ -80,6 +97,8 @@ class Db
     public function query($query, array $params = [])
     {
         $statement = $this->connection->prepare($query);
+
+        $this->queries[] = $query;
 
         $result = $statement->execute($params);
 

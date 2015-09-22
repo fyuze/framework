@@ -140,9 +140,6 @@ class DatabaseDbTest extends \PHPUnit_Framework_TestCase
 
     public function testNonReadOrWriteReturnsStatement()
     {
-        $user = new StdClass;
-        $user->name = 'matthew';
-
         $statement = Mockery::mock('\PDOStatement');
         $statement->shouldReceive('execute')->once()
             ->andReturnSelf();
@@ -159,5 +156,26 @@ class DatabaseDbTest extends \PHPUnit_Framework_TestCase
 
         $query = $db->query('SET NAMES UTF-8');
         $this->assertInstanceOf('\PDOSTatement', $query);
+    }
+
+    public function testCountsCorrectNumberOfExecutedQueries()
+    {
+        $statement = Mockery::mock('\PDOStatement');
+        $statement->shouldReceive('execute')->once()
+            ->andReturnSelf();
+
+        $pdo = Mockery::mock('\PDO');
+        $pdo->shouldReceive('prepare')->twice()
+            ->with('SELECT 1')
+            ->andReturn($statement);
+
+        $conn = Mockery::mock('\Fyuze\Database\Drivers\ConnectionInterface');
+        $conn->shouldReceive('open')->once()->andReturn($pdo);
+
+        $db = new Db($conn);
+
+        $query = $db->query('SELECT 1');
+        $query = $db->query('SELECT 1');
+        $this->assertCount(2, $db->getQueries());
     }
 }
