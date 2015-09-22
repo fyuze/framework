@@ -265,7 +265,7 @@ class Request
                 return array_key_exists($key, $this->server);
             });
 
-            $ip = count($filter) ? $this->server[reset($filter)] : null;
+            $ip = $this->server(reset($filter));
         }
 
         return (false !== filter_var($ip, FILTER_VALIDATE_IP)) ? $ip : '127.0.0.1';
