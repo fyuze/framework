@@ -1,6 +1,7 @@
 <?php
 
 use Fyuze\Http\Response;
+use Fyuze\Http\Exception\NotFoundException;
 
 class KernelApplicationWebTest extends PHPUnit_Framework_TestCase
 {
@@ -31,6 +32,7 @@ class KernelApplicationWebTest extends PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('Fyuze\Http\Response', $response);
         $this->assertEquals(404, $response->getStatusCode());
+        $this->assertEquals('<body>Not Found</body>', $response->getBody());
     }
 
     public function testWebApplicationThrows500s()
@@ -44,7 +46,7 @@ class KernelApplicationWebTest extends PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('Fyuze\Http\Response', $response);
         $this->assertEquals(500, $response->getStatusCode());
-        $this->assertEquals('An unkown error has occurred: stuff broke', $response->getBody());
+        $this->assertEquals('<body>An unkown error has occurred: stuff broke</body>', $response->getBody());
     }
 }
 
