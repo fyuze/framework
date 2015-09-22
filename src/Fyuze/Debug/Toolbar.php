@@ -29,6 +29,7 @@ class Toolbar
     }
 
     /**
+     * @codeCoverageIgnore
      * @return View
      */
     public function render()
