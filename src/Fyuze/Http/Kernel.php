@@ -43,18 +43,20 @@ class Kernel
 
             $body = $this->resolve($route->getAction(), $request->getParams());
 
-            $this->registry->add('response', new Response($body));
-
-            return $this->registry->make('response');
+            $response = new Response($body);
 
         } catch (NotFoundException $e) {
 
-            return new Response('Not Found', 404);
+            $response = new Response('<body>Not Found</body>', 404);
 
         } catch (\Exception $e) {
 
-            return new Response(sprintf('An unkown error has occurred: %s', $e->getMessage()), 500);
+            $response = new Response(sprintf('<body>An unkown error has occurred: %s</body>', $e->getMessage()), 500);
         }
+
+        $this->registry->add('response', $response);
+
+        return $this->registry->make('response');
     }
 
     /**
