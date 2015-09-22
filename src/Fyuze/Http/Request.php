@@ -179,16 +179,15 @@ class Request
     /**
      * @param null $key
      * @param null $value
-     * @return null
+     * @return mixed string|array|null
      */
     public function input($key = null, $value = null)
     {
         if ($key === null) {
             return $this->input;
         }
-
         if (!array_key_exists($key, $this->input)) {
-            return ($value === null) ? null : $this->input[$key] = $value;
+            return $this->input[$key] = $value;
         }
 
         if ($value !== null) {
@@ -219,8 +218,8 @@ class Request
             return $this->headers[strtoupper($key)] = $value;
         }
 
-        foreach($this->headers as $_key => $_value) {
-            if(stripos($_key, $key) !== false) {
+        foreach ($this->headers as $_key => $_value) {
+            if (stripos($_key, $key) !== false) {
                 return $this->headers[$_key];
             }
         }
