@@ -29,7 +29,6 @@ class Debug extends Service
             $toolbar = new Toolbar();
             $collectors = [];
 
-            //$collectors[] = new Response($this->registry->make('response'));
             $collectors[] = new Performance();
             $collectors[] = new DatabaseCollector($this->registry->make('db'));
 
