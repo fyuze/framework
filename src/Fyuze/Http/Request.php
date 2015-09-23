@@ -124,10 +124,12 @@ class Request
             return $this->headers;
         }
 
-        foreach ($this->server as $key => $value) {
-            if (!is_array($key) && strpos($key, 'HTTP_') !== false) {
-                $this->headers[substr($key, 5)] = $value;
-            }
+        $headers = array_filter(array_keys($this->server), function ($key) {
+            return !is_array($key) && strpos($key, 'HTTP_') !== false;
+        });
+
+        foreach($headers as $header) {
+            $this->headers[substr($header, 5)] = $this->server($header);
         }
 
         return $this->headers;
