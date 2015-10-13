@@ -57,12 +57,21 @@ class Emitter
      */
     public function emit($name, array $params = [])
     {
+        $count = 0;
+
         foreach ($this->locate($name) as $event) {
+
+            $count++;
 
             call_user_func_array(
                 $event,
                 $params
             );
+        }
+
+        if($count > 0) {
+
+            $this->log(sprintf('Event: %s has been called. %d listeners were fired', $name, $count));
         }
     }
 
@@ -75,16 +84,9 @@ class Emitter
     {
         if (!$this->has($name)) {
 
-            $message = sprintf('Event %s has not been set', $name);
+            $this->log(sprintf('Event %s called but no listeners were registered', $name));
 
-            if ($this->logger !== null) {
-
-                $this->logger->warning($message);
-
-                return [];
-            }
-
-            throw new InvalidArgumentException($message);
+            return [];
         }
 
         return $this->events[$name];
@@ -99,5 +101,22 @@ class Emitter
         $this->logger = $logger;
 
         return $this;
+    }
+
+    /**
+     * @param $message
+     * @param string $level
+     * @return bool
+     */
+    protected function log($message, $level = 'notice')
+    {
+        if ($this->logger !== null) {
+
+            $this->logger->log($level, $message);
+
+            return true;
+        }
+
+        return false;
     }
 }

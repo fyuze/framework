@@ -59,17 +59,26 @@ class EventEmitterTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($emitter->drop('foo'));
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
-    public function testEmitterThrowsExceptionWithoutLogger()
+    public function testEmitterWithLoggerCapturesWhenFired()
     {
-        (new Emitter())->emit('foo');
+        $logger = new \Fyuze\Log\Handlers\File([]);
+
+        $emitter = new Emitter();
+        $emitter->setLogger($logger);
+        $emitter->listen('foo', function() {
+            return 'bar';
+        });
+        $emitter->listen('foo', function() {
+            return 'bar';
+        });
+        $emitter->emit('foo');
+
+        $this->assertCount(1, $logger->getLogs());
+        $this->assertEquals('Event: foo has been called. 2 listeners were fired', $logger->getLogs()[0]);
     }
 
-    public function testEmitterLogsInsteadsOfDiesWithLogger()
+    public function testEmitterWithLoggerCapturesNoEventsMessage()
     {
-        /** @var \Fyuze\Log\Handlers\Log $mock */
         $logger = new \Fyuze\Log\Handlers\File([]);
 
         $emitter = new Emitter();
@@ -77,6 +86,6 @@ class EventEmitterTest extends PHPUnit_Framework_TestCase
         $emitter->emit('foo');
 
         $this->assertCount(1, $logger->getLogs());
-        $this->assertEquals('Event foo has not been set', $logger->getLogs()[0]);
+        $this->assertEquals('Event foo called but no listeners were registered', $logger->getLogs()[0]);
     }
 }
