@@ -22,7 +22,7 @@ class Emitter
      */
     public function listen($name, \Closure $closure)
     {
-        $this->events[$name] = $closure;
+        $this->events[$name][] = $closure;
     }
 
     /**
@@ -58,7 +58,8 @@ class Emitter
     public function emit($name, array $params = [])
     {
         foreach ($this->locate($name) as $event) {
-            return call_user_func_array(
+
+            call_user_func_array(
                 $event,
                 $params
             );
@@ -86,7 +87,7 @@ class Emitter
             throw new InvalidArgumentException($message);
         }
 
-        return [$this->events[$name]];
+        return $this->events[$name];
     }
 
     /**

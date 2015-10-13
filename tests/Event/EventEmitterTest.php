@@ -4,14 +4,36 @@ use Fyuze\Event\Emitter;
 
 class EventEmitterTest extends PHPUnit_Framework_TestCase
 {
-    public function testEventsRegisterAndEmitProperly()
+    public function testEventRegistersAndResolvesSingleEvent()
     {
         $emitter = new Emitter();
-        $emitter->listen('foo', function () {
+        $fired = false;
+        $emitter->listen('foo', function () use (&$fired) {
+            $fired = true;
+            return 'bar';
+        });
+        $emitter->emit('foo');
+        $this->assertTrue($fired);
+    }
+
+    public function testMultipleListenersBoundToSameEvent()
+    {
+        $emitter = new Emitter();
+        $event1 = $event2 = false;
+        $emitter->listen('foo', function () use (&$event1) {
+            $event1 = true;
             return 'bar';
         });
 
-        $this->assertEquals('bar', $emitter->emit('foo'));
+        $emitter->listen('foo', function () use (&$event2) {
+            $event2 = true;
+            return 'baz';
+        });
+
+        $emitter->emit('foo');
+
+        $this->assertTrue($event1);
+        $this->assertTrue($event2);
     }
 
     public function testHasRecognizesRegisteredEvents()
