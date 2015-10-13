@@ -1,8 +1,6 @@
 <?php
 namespace Fyuze\Kernel\Services;
 
-use Fyuze\Database\Db;
-use Fyuze\Database\Drivers\Factory;
 use Fyuze\Event\Emitter;
 use Fyuze\Kernel\Service as BaseService;
 

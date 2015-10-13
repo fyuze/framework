@@ -29,5 +29,6 @@ class KernelFyuzeTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Fyuze\Database\Db', $container->make('db'));
         $this->assertInstanceOf('Fyuze\Log\Logger', $container->make('logger'));
         $this->assertInstanceOf('Fyuze\Debug\Toolbar', $container->make('toolbar'));
+        $this->assertInstanceOf('Fyuze\Event\Emitter', $container->make('emitter'));
     }
 }
