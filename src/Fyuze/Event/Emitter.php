@@ -1,8 +1,8 @@
 <?php
 namespace Fyuze\Event;
 
-use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
+use InvalidArgumentException;
 
 class Emitter
 {
@@ -55,41 +55,17 @@ class Emitter
      * @return mixed
      * @throws InvalidArgumentException
      */
-    public function emit($name, array $params = [])
+    public function emit($name, $params = null)
     {
-        $count = 0;
-
         foreach ($this->locate($name) as $event) {
-
-            $count++;
 
             call_user_func_array(
                 $event,
-                $params
+                is_array($params) ? $params : [$params]
             );
+
+            $this->log(sprintf('Event: %s fired: %s', $name, json_encode($event)));
         }
-
-        if($count > 0) {
-
-            $this->log(sprintf('Event: %s has been called. %d listeners were fired', $name, $count));
-        }
-    }
-
-    /**
-     * @param $name
-     * @return array
-     * @throws InvalidArgumentException
-     */
-    public function locate($name)
-    {
-        if (!$this->has($name)) {
-
-            $this->log(sprintf('Event %s called but no listeners were registered', $name));
-
-            return [];
-        }
-
-        return $this->events[$name];
     }
 
     /**
@@ -101,6 +77,23 @@ class Emitter
         $this->logger = $logger;
 
         return $this;
+    }
+
+    /**
+     * @param $name
+     * @return array
+     */
+    protected function locate($name)
+    {
+        if (!$this->has($name)) {
+
+            $this->log(sprintf('Event %s called, but no listeners were registered', $name));
+
+            return [];
+        }
+
+        return $this->events[$name];
+
     }
 
     /**

@@ -36,6 +36,21 @@ class EventEmitterTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($event2);
     }
 
+    public function testListenerHasAppropriateArgs()
+    {
+        $emitter = new Emitter();
+        $emitter->listen('foo', function ($obj) {
+            $this->assertInstanceOf('StdClass', $obj);
+            $this->assertEquals('bar', $obj->foo);
+            return 'bar';
+        });
+
+        $stdClass = new StdClass;
+        $stdClass->foo = 'bar';
+
+        $emitter->emit('foo', $stdClass);
+    }
+
     public function testHasRecognizesRegisteredEvents()
     {
         $emitter = new Emitter();
@@ -65,16 +80,16 @@ class EventEmitterTest extends PHPUnit_Framework_TestCase
 
         $emitter = new Emitter();
         $emitter->setLogger($logger);
-        $emitter->listen('foo', function() {
+        $emitter->listen('foo', function () {
             return 'bar';
         });
-        $emitter->listen('foo', function() {
+        $emitter->listen('foo', function () {
             return 'bar';
         });
         $emitter->emit('foo');
 
-        $this->assertCount(1, $logger->getLogs());
-        $this->assertEquals('Event: foo has been called. 2 listeners were fired', $logger->getLogs()[0]);
+        $this->assertCount(2, $logger->getLogs());
+        $this->assertEquals('Event: foo fired: {}', $logger->getLogs()[0]);
     }
 
     public function testEmitterWithLoggerCapturesNoEventsMessage()
@@ -86,6 +101,6 @@ class EventEmitterTest extends PHPUnit_Framework_TestCase
         $emitter->emit('foo');
 
         $this->assertCount(1, $logger->getLogs());
-        $this->assertEquals('Event foo called but no listeners were registered', $logger->getLogs()[0]);
+        $this->assertEquals('Event foo called, but no listeners were registered', $logger->getLogs()[0]);
     }
 }
