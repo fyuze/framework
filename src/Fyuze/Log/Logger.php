@@ -2,9 +2,11 @@
 namespace Fyuze\Log;
 
 use RuntimeException;
+use Psr\Log\AbstractLogger;
+use Psr\Log\LoggerInterface;
 use Fyuze\Log\Handlers\Handler;
 
-class Logger
+class Logger extends AbstractLogger implements LoggerInterface
 {
     /**
      * Logging handlers
@@ -12,6 +14,11 @@ class Logger
      * @var array
      */
     protected $handlers = [];
+
+    /**
+     * @var array
+     */
+    protected $logs = [];
 
     /**
      * Logger constructor.
@@ -50,10 +57,23 @@ class Logger
         }
 
         foreach ($this->handlers as $handler) {
-            $handler->$level($message, $context);
+
+            $this->logs[] = sprintf('[%s] %s', $level, $message);
+
+            $handler->write($level, $message, $context);
         }
 
         return $this;
+    }
+
+    /**
+     * Gets all logs as an array
+     *
+     * @return array
+     */
+    public function getLogs()
+    {
+        return $this->logs;
     }
 
     /**
@@ -67,27 +87,9 @@ class Logger
 
         /** @var \Fyuze\Log\Handlers\Log $handler */
         foreach ($this->handlers as $handler) {
-            $logs .= implode("\n", $handler->getLogs());
+            $logs .= implode("\n", $this->getLogs());
         }
 
         return $logs;
-    }
-
-    /**
-     * @param $method
-     * @param $params
-     *
-     * @return Logger
-     * @throws RuntimeException
-     */
-    public function __call($method, $params)
-    {
-        if (!array_key_exists(1, $params)) {
-            $params[1] = [];
-        }
-
-        list($message, $context) = $params;
-
-        return $this->log($method, $message, $context);
     }
 }

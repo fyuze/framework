@@ -76,7 +76,9 @@ class EventEmitterTest extends PHPUnit_Framework_TestCase
 
     public function testEmitterWithLoggerCapturesWhenFired()
     {
-        $logger = new \Fyuze\Log\Handlers\File([]);
+        $logger = Mockery::mock('\Fyuze\Log\Logger');
+        $logger->shouldReceive('log')->once()->andReturnSelf()
+            ->shouldReceive('getLogs')->once()->andReturn(['Event: foo fired: {}', 2]);
 
         $emitter = new Emitter();
         $emitter->setLogger($logger);
@@ -94,11 +96,14 @@ class EventEmitterTest extends PHPUnit_Framework_TestCase
 
     public function testEmitterWithLoggerCapturesNoEventsMessage()
     {
-        $logger = new \Fyuze\Log\Handlers\File([]);
+        $logger = Mockery::mock('\Fyuze\Log\Logger');
+        $logger->shouldReceive('log')->once()->andReturnSelf()
+            ->shouldReceive('getLogs')->once()->andReturn(['Event foo called, but no listeners were registered']);
 
-        $emitter = new Emitter();
-        $emitter->setLogger($logger);
-        $emitter->emit('foo');
+
+
+        (new Emitter)->setLogger($logger)
+            ->emit('foo');
 
         $this->assertCount(1, $logger->getLogs());
         $this->assertEquals('Event foo called, but no listeners were registered', $logger->getLogs()[0]);

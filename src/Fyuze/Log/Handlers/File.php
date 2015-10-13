@@ -1,7 +1,7 @@
 <?php
 namespace Fyuze\Log\Handlers;
 
-class File extends Log implements Handler
+class File implements Handler
 {
     protected $file;
 
@@ -10,5 +10,5 @@ class File extends Log implements Handler
         $this->file = $file;
     }
 
-    public function write(){}
+    public function write($level, $message, $context) {}
 }

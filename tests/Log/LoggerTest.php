@@ -11,9 +11,9 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
         $logger->register(
             new File('my.log')
         );
-        $logger->alert('hi, it\'s an alert');
+        $logger->log('alert', 'hi, it\'s an alert');
 
-        $this->assertSame("hi, it's an alert", (string)$logger);
+        $this->assertSame("[alert] hi, it's an alert", (string)$logger);
     }
 
     /**
