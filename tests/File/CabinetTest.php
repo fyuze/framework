@@ -16,7 +16,7 @@ class FileCabinetTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->path = __DIR__ . '/../mocks/app';
+        $this->path = __DIR__ . '/mock';
     }
 
     public function testAllFilesAreFoundFromAppMocks()
@@ -24,7 +24,7 @@ class FileCabinetTest extends \PHPUnit_Framework_TestCase
         $cabinet = (new Cabinet())
             ->in($this->path);
 
-        $filesToAssert = ['cache', 'config', 'routes.php', 'views', 'test.bat'];
+        $filesToAssert = ['foo', 'bar.php', 'baz.bat'];
 
         $idx = 0;
         foreach ($cabinet as $source) {
@@ -39,7 +39,7 @@ class FileCabinetTest extends \PHPUnit_Framework_TestCase
             ->only('files')
             ->in($this->path);
 
-        $filesToAssert = ['routes.php', 'test.bat'];
+        $filesToAssert = ['bar.php', 'baz.bat'];
 
         $idx = 0;
         foreach ($cabinet as $source) {
@@ -54,7 +54,7 @@ class FileCabinetTest extends \PHPUnit_Framework_TestCase
             ->only('folders')
             ->in($this->path);
 
-        $foldersToAssert = ['cache', 'config', 'views'];
+        $foldersToAssert = ['foo'];
 
         $idx = 0;
         foreach ($cabinet as $source) {
@@ -70,7 +70,7 @@ class FileCabinetTest extends \PHPUnit_Framework_TestCase
             ->only('files')
             ->in($this->path);
 
-        $filesToAssert = ['routes.php', 'test.bat'];
+        $filesToAssert = ['bar.php', 'baz.bat'];
 
         $idx = 0;
         foreach ($cabinet as $source) {
