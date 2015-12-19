@@ -5,7 +5,6 @@ use SplFileInfo;
 use GlobIterator;
 use InvalidArgumentException;
 use Fyuze\Config\Parsers\PHP;
-use Fyuze\Config\Parsers\Yaml;
 
 class Config
 {
@@ -34,7 +33,6 @@ class Config
      * @var array
      */
     protected $types = [
-        Yaml::class,
         PHP::class
     ];
 
@@ -99,9 +97,9 @@ class Config
 
         foreach (new GlobIterator($this->path . '/*.*') as $file) {
 
-            list($key, $value) = $this->getType($file);
-
-            $this->configs[$key] = $value;
+            if($config = $this->getType($file)) {
+                $this->configs[$config[0]] = $config[1];
+            }
         }
     }
 
@@ -118,7 +116,9 @@ class Config
             return in_array($extension, $n::$extensions);
         });
 
-        $class = reset($type);
+        if (!$class = reset($type)) {
+            return false;
+        }
 
         return [$name, (new $class)->parse($file)];
     }
