@@ -54,13 +54,11 @@ class FileCabinetTest extends \PHPUnit_Framework_TestCase
             ->only('folders')
             ->in($this->path);
 
-        $foldersToAssert = ['foo'];
+	foreach ($cabinet as $source) {
 
-        $idx = 0;
-        foreach ($cabinet as $source) {
-            $this->assertEquals($foldersToAssert[$idx], $source->getBaseName());
-            $idx++;
+	    $this->assertEquals('foo', $source->getBaseName());
         }
+
     }
 
     public function testSearchFiltersApplyAsExpected()
