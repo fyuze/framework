@@ -1,12 +1,12 @@
 <?php
 namespace Fyuze\Routing;
 
-use Fyuze\Http\Request;
+use Psr\Http\Message\ServerRequestInterface;
 
 class Matcher
 {
     /**
-     * @var Request
+     * @var ServerRequestInterface
      */
     protected $request;
 
@@ -16,10 +16,10 @@ class Matcher
     protected $route;
 
     /**
-     * @param Request $request
+     * @param ServerRequestInterface $request
      * @param Route $route
      */
-    public function __construct(Request $request, Route $route)
+    public function __construct(ServerRequestInterface $request, Route $route)
     {
         $this->request = $request;
         $this->route = $route;
@@ -30,7 +30,7 @@ class Matcher
      */
     public function resolves()
     {
-        if (preg_match($this->compileRegex(), $this->request->getPath(), $parameters) > 0) {
+        if (preg_match($this->compileRegex(), $this->request->getUri()->getPath(), $parameters) > 0) {
 
             $params = [];
 
@@ -40,10 +40,11 @@ class Matcher
                 }
             }
 
-            $this->request->setParams($params);
+            $this->request = $this->request->withQueryParams($params);
 
             return true;
         }
+
         return false;
     }
 

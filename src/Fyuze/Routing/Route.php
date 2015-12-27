@@ -2,8 +2,8 @@
 namespace Fyuze\Routing;
 
 use Closure;
-use Fyuze\Http\Request;
 use InvalidArgumentException;
+use Psr\Http\Message\ServerRequestInterface;
 
 class Route
 {
@@ -66,10 +66,10 @@ class Route
     /**
      * Check if route matches given url
      *
-     * @param Request $request
+     * @param ServerRequestInterface $request
      * @return bool
      */
-    public function matches(Request $request)
+    public function matches(ServerRequestInterface $request)
     {
         return (new Matcher($request, $this))->resolves();
     }

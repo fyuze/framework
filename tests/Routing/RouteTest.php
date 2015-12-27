@@ -1,8 +1,8 @@
 <?php
 
-use Fyuze\Http\Request;
 use Fyuze\Http\Response;
 use Fyuze\Routing\Route;
+use Fyuze\Http\Message\ServerRequest as Request;
 
 class RouteTest extends PHPUnit_Framework_TestCase
 {
@@ -22,8 +22,8 @@ class RouteTest extends PHPUnit_Framework_TestCase
         $route = new Route('/', 'index', 'TestController@indexAction');
 
         $this->assertTrue($route->matches($request));
-        $this->assertEquals('/?test=1', $request->getUri());
-        $this->assertEquals('/', $request->getPath());
+        $this->assertEquals('/?test=1', (string)$request->getUri());
+        $this->assertEquals('/', $request->getUri()->getPath());
     }
 
     public function testResolvesWithIndexFile()
@@ -32,8 +32,8 @@ class RouteTest extends PHPUnit_Framework_TestCase
         $route = new Route('/', 'index', 'TestController@indexAction');
 
         $this->assertTrue($route->matches($request));
-        $this->assertEquals('/index.php/?test=1', $request->getUri());
-        $this->assertEquals('/', $request->getPath());
+        $this->assertEquals('/?test=1', (string) $request->getUri());
+        $this->assertEquals('/', $request->getUri()->getPath());
     }
 
     public function testResolvesWithTrailingSlash() {
@@ -50,7 +50,6 @@ class RouteTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('TestController', $route->getAction()[0]);
         $this->assertEquals('indexAction', $route->getAction()[1]);
     }
-
 
     public function testRouteWithTokens()
     {
@@ -77,7 +76,7 @@ class RouteTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($route->matches(Request::create('/')));
         $this->assertFalse($route->matches(Request::create('/foo/bar/baz/biz')));
 
-        $this->assertEquals('Hello, Matthew!', call_user_func_array([new $controller, $method], ['Matthew']));
+        $this->assertEquals('Hello, Matthew!',(string) call_user_func_array([new $controller, $method], ['Matthew']));
     }
 
     /**
@@ -94,6 +93,6 @@ class RouteTest extends PHPUnit_Framework_TestCase
 class TestController {
     public function indexAction() {}
     public function helloAction($name) {
-        return new Response(sprintf('Hello, %s!', $name));
+        return sprintf('Hello, %s!', $name);
     }
 }

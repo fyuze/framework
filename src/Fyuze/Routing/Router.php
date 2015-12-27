@@ -1,8 +1,8 @@
 <?php
 namespace Fyuze\Routing;
 
-use Fyuze\Http\Request;
 use Fyuze\Http\Exception\NotFoundException;
+use Psr\Http\Message\ServerRequestInterface;
 
 class Router
 {
@@ -20,26 +20,26 @@ class Router
     }
 
     /**
-     * @param Request $request
+     * @param ServerRequestInterface $request
      * @return Route
      * @throws NotFoundException
      */
-    public function resolve(Request $request)
+    public function resolve(ServerRequestInterface $request)
     {
         $route = $this->match($request);
 
         if (count($route) === 0) {
-            throw new NotFoundException;
+            throw new NotFoundException('Page not found');
         }
 
         return reset($route);
     }
 
     /**
-     * @param Request $request
+     * @param ServerRequestInterface $request
      * @return array
      */
-    protected function match(Request $request)
+    protected function match(ServerRequestInterface $request)
     {
         return array_filter($this->routes->getRoutes(), function (Route $route) use ($request) {
             return $route->matches($request);
