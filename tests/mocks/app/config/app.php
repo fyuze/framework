@@ -5,7 +5,10 @@ return [
     'timezone' => 'UTC',
     'charset' => 'UTF-8',
     'services' => [
-
+        'Fyuze\Kernel\Services\Database',
+        'Fyuze\Kernel\Services\Logger',
+        'Fyuze\Kernel\Services\Event',
+        'Fyuze\Kernel\Services\Debug'
     ],
     'modules' => [
 
