@@ -1,33 +1,15 @@
 <?php
 namespace Fyuze\Http;
 
-class Response
+use Fyuze\Http\Message\Response as PsrResponse;
+use Fyuze\Http\Message\Stream;
+
+class Response extends PsrResponse
 {
     /**
      * @var string
      */
     protected $contentType = 'text/html';
-
-    /**
-     * Response headers
-     *
-     * @var array
-     */
-    protected $headers = [];
-
-    /**
-     * Response code
-     *
-     * @var int
-     */
-    protected $code;
-
-    /**
-     * Response body
-     *
-     * @var string
-     */
-    protected $body;
 
     /**
      * @var boolean
@@ -40,66 +22,39 @@ class Response
     protected $compression = true;
 
     /**
-     * @param null $body
-     * @param int $code
+     * @param $body
+     * @param $code
+     * @return Response
      */
-    public function __construct($body = null, $code = 200)
+    public static function create($body = '', $code = 200)
     {
-        $this->body = $body;
-        $this->code = $code;
-    }
-
-    /**
-     * @param string $key
-     * @param mixed $value
-     * @return mixed
-     */
-    public function header($key, $value = null)
-    {
-        if (null !== $value) {
-            // We are setting a header
-            return $this->headers[$key] = $value;
-        }
-
-        return $this->headers[$key];
+        $stream = new Stream('php://memory', 'wb+');
+        $stream->write($body);
+        return (new static)
+            ->withStatus($code)
+            ->withBody($stream);
     }
 
     /**
      * Set response caching, blank for default
      *
      * @param boolean $value
+     * @return bool
      */
     public function setCache($value = false)
     {
-        $this->cache = $value;
+        return $this->cache = $value;
     }
 
     /**
      * Set output compression, blank for default
      *
      * @param boolean $value
+     * @return bool
      */
     public function setCompression($value = true)
     {
-        $this->compression = $value;
-    }
-
-    /**
-     * @return int
-     */
-    public function getStatusCode()
-    {
-        return (int) $this->code;
-    }
-
-    /**
-     * Get response body
-     *
-     * @return string
-     */
-    public function getBody()
-    {
-        return $this->body;
+        return $this->compression = $value;
     }
 
     /**
@@ -109,7 +64,7 @@ class Response
      */
     public function modify(\Closure $closure)
     {
-        return $this->body = $closure($this->body);
+        return $this->stream = $closure($this->stream);
     }
 
     /**
@@ -129,11 +84,11 @@ class Response
 
         http_response_code($this->getStatusCode());
 
-        if ($this->body !== null) {
+        if ($this->stream !== null) {
             if ($this->compression) {
                 ob_start('ob_gzhandler');
             }
-            echo $this->body;
+            echo (string) $this;
         }
     }
 
@@ -142,6 +97,6 @@ class Response
      */
     public function __toString()
     {
-        return $this->getBody();
+        return (string)$this->getBody();
     }
 }

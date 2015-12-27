@@ -2,6 +2,7 @@
 namespace Fyuze\Http;
 
 use Closure;
+use Psr\Http\Message\ServerRequestInterface;
 use ReflectionClass;
 use ReflectionParameter;
 use Fyuze\Http\Exception\NotFoundException;
@@ -32,26 +33,29 @@ class Kernel
     }
 
     /**
-     * @param Request $request
+     * @param ServerRequestInterface $request
      * @return Response|mixed
      */
-    public function handle(Request $request)
+    public function handle(ServerRequestInterface $request)
     {
         try {
 
             $route = $this->router->resolve($request);
 
-            $body = $this->resolve($route->getAction(), $request->getParams());
+            $body = $this->resolve($route->getAction(), $request->getQueryParams());
 
-            $response = new Response($body);
+            $response = Response::create($body);
 
         } catch (NotFoundException $e) {
 
-            $response = new Response('<body>Not Found</body>', 404);
+            $response = Response::create('<body>Not Found</body>', 404);
 
         } catch (\Exception $e) {
 
-            $response = new Response(sprintf('<body>An unkown error has occurred: %s</body>', $e->getMessage()), 500);
+            $response = Response::create(
+                sprintf('<body>An unkown error has occurred: %s</body>', $e->getMessage()),
+                500
+            );
         }
 
         $this->registry->add('response', $response);
