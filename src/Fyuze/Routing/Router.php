@@ -42,7 +42,10 @@ class Router
     protected function match(ServerRequestInterface $request)
     {
         return array_filter($this->routes->getRoutes(), function (Route $route) use ($request) {
-            return $route->matches($request);
+            $match = $route->matches($request);
+            if(false !== $match) {
+                return $route->setParams($match);
+            }
         });
     }
 }

@@ -23,6 +23,11 @@ class Route
     protected $action;
 
     /**
+     * @var
+     */
+    protected $params;
+
+    /**
      * @param $uri
      * @param $name
      * @param $action
@@ -72,5 +77,16 @@ class Route
     public function matches(ServerRequestInterface $request)
     {
         return (new Matcher($request, $this))->resolves();
+    }
+
+    public function getQueryParams() {
+        return $this->params;
+    }
+
+    public function setParams(array $params = [])
+    {
+        $this->params = $params;
+
+        return $this;
     }
 }

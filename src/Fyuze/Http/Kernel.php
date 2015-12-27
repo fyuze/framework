@@ -42,7 +42,7 @@ class Kernel
 
             $route = $this->router->resolve($request);
 
-            $body = $this->resolve($route->getAction(), $request->getQueryParams());
+            $body = $this->resolve($route->getAction(), $route->getQueryParams());
 
             $response = Response::create($body);
 

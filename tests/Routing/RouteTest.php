@@ -21,7 +21,7 @@ class RouteTest extends PHPUnit_Framework_TestCase
         $request = Request::create('/?test=1');
         $route = new Route('/', 'index', 'TestController@indexAction');
 
-        $this->assertTrue($route->matches($request));
+        $this->assertNotFalse($route->matches($request));
         $this->assertEquals('/?test=1', (string)$request->getUri());
         $this->assertEquals('/', $request->getUri()->getPath());
     }
@@ -31,7 +31,7 @@ class RouteTest extends PHPUnit_Framework_TestCase
         $request = Request::create('/index.php/?test=1');
         $route = new Route('/', 'index', 'TestController@indexAction');
 
-        $this->assertTrue($route->matches($request));
+        $this->assertNotFalse($route->matches($request));
         $this->assertEquals('/?test=1', (string) $request->getUri());
         $this->assertEquals('/', $request->getUri()->getPath());
     }
@@ -40,7 +40,7 @@ class RouteTest extends PHPUnit_Framework_TestCase
         $request = Request::create('/index.php/');
         $route = new Route('/', 'index', 'TestController@indexAction');
 
-        $this->assertTrue($route->matches($request));
+        $this->assertNotFalse($route->matches($request));
     }
 
     public function testControllerRoute()
@@ -57,7 +57,7 @@ class RouteTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals('TestController', $route->getAction()[0]);
         $this->assertEquals('helloAction', $route->getAction()[1]);
-        $this->assertTrue($route->matches(Request::create('/hello/bob/1')));
+        $this->assertNotFalse($route->matches(Request::create('/hello/bob/1')));
         $this->assertFalse($route->matches(Request::create('/')));
         $this->assertFalse($route->matches(Request::create('/hello')));
     }
@@ -70,9 +70,9 @@ class RouteTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals('TestController', $controller);
         $this->assertEquals('helloAction', $method);
-        $this->assertTrue($route->matches(Request::create('/foo')));
-        $this->assertTrue($route->matches(Request::create('/foo/bar')));
-        $this->assertTrue($route->matches(Request::create('/foo/bar/baz')));
+        $this->assertNotFalse($route->matches(Request::create('/foo')));
+        $this->assertNotFalse($route->matches(Request::create('/foo/bar')));
+        $this->assertNotFalse($route->matches(Request::create('/foo/bar/baz')));
         $this->assertFalse($route->matches(Request::create('/')));
         $this->assertFalse($route->matches(Request::create('/foo/bar/baz/biz')));
 

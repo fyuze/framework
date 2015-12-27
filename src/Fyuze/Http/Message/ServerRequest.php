@@ -43,9 +43,8 @@ class ServerRequest extends Request implements ServerRequestInterface
      * @param string $method
      * @param array $server
      */
-    public function __construct($uri = '/', $method = 'GET', $server = [])
+    public function __construct($server = [])
     {
-        $this->uri = ($uri instanceof UriInterface) ? $uri : new Uri($uri);
         $this->serverParams = $server;
     }
 
@@ -70,15 +69,15 @@ class ServerRequest extends Request implements ServerRequestInterface
 
 
         /** @todo need a better way to handle this */
-        if (mb_stripos($uri, '/index.php') === 0) {
-            $uri = str_replace('/index.php', '', $uri);
+        if (mb_stripos($server['REQUEST_URI'], '/index.php') === 0) {
+            $server['REQUEST_URI'] = str_replace('/index.php', '', $server['REQUEST_URI']);
         }
 
         return (new static(
-            ($uri === '') ? '/' : $uri, $method, '', $server, [], []
+            $server
         ))
             ->withMethod($method)
-            ->withRequestTarget($uri)
+            ->withUri(new Uri($server['REQUEST_URI']))
             ->withCookieParams($_COOKIE)
             ->withQueryParams($_GET)
             ->withParsedBody($_POST)

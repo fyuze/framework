@@ -40,9 +40,7 @@ class Matcher
                 }
             }
 
-            $this->request = $this->request->withQueryParams($params);
-
-            return true;
+            return $params;
         }
 
         return false;

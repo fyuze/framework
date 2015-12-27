@@ -15,7 +15,7 @@ class HttpRequestTest extends PHPUnit_Framework_TestCase
         $_SERVER['REQUEST_URI'] = '/index.php';
         $request = Request::create();
 
-        $this->assertEquals('/', $request->getUri()->getPath());
+        $this->assertEquals('/', $request->getRequestTarget());
     }
 
     public function testResolvesFromGlobalsWithIndex()
