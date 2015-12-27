@@ -6,7 +6,7 @@ class ConfigParserPHPTest extends PHPUnit_Framework_TestCase
     {
         $parser = new \Fyuze\Config\Parsers\PHP();
 
-        $path = realpath(__DIR__ . '/../../mocks/app/config') . '/app-php.php';
+        $path = __DIR__ . '/../../mocks/app/config/app.php';
         $file = new SplFileInfo($path);
         $config = $parser->parse($file);
 
