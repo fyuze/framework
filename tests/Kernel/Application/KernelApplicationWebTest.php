@@ -17,7 +17,7 @@ class KernelApplicationWebTest extends PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Fyuze\Http\Response', $response);
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals('/', $response->getBody());
+        $this->assertEquals('foobar', (string) $response->getBody());
     }
 
     public function testWebApplicationThrows404s()
@@ -32,7 +32,7 @@ class KernelApplicationWebTest extends PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('Fyuze\Http\Response', $response);
         $this->assertEquals(404, $response->getStatusCode());
-        $this->assertEquals('<body>Not Found</body>', $response->getBody());
+        $this->assertEquals('<body>Not Found</body>', (string) $response->getBody());
     }
 
     public function testWebApplicationThrows500s()
@@ -53,10 +53,11 @@ class KernelApplicationWebTest extends PHPUnit_Framework_TestCase
 
 class HomeController {
     protected $registry;
-    public function __construct(\Fyuze\Http\Request $registry) {
+    public function __construct(\Fyuze\Kernel\Registry $registry) {
         $this->registry = $registry;
     }
     public function indexAction(\Fyuze\Http\Request $request) {
-        return new Response($request->getPath());
+
+        return 'foobar';
     }
 }
