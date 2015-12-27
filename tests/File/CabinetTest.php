@@ -24,7 +24,7 @@ class FileCabinetTest extends \PHPUnit_Framework_TestCase
         $cabinet = (new Cabinet())
             ->in($this->path);
 
-        $filesToAssert = ['foo', 'bar.php', 'baz.bat'];
+        $filesToAssert = ['bar.php', 'baz.bat', 'foo'];
 
         $idx = 0;
         foreach ($cabinet as $source) {
