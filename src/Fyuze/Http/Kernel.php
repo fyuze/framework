@@ -2,6 +2,7 @@
 namespace Fyuze\Http;
 
 use Closure;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use ReflectionClass;
 use ReflectionParameter;
@@ -42,9 +43,11 @@ class Kernel
 
             $route = $this->router->resolve($request);
 
-            $body = $this->resolve($route->getAction(), $route->getQueryParams());
+            $response = $this->resolve($route->getAction(), $route->getQueryParams());
+            if(false === $response instanceof ResponseInterface) {
+                $response = Response::create($response);
+            }
 
-            $response = Response::create($body);
 
         } catch (NotFoundException $e) {
 
