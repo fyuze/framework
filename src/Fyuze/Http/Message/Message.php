@@ -60,7 +60,13 @@ class Message implements MessageInterface
      */
     public function getHeaders()
     {
-        return $this->headers;
+        $headers = [];
+
+        foreach($this->headers as $name => $values) {
+            $headers[strtolower($name)] = $values;
+        }
+
+        return $headers;
     }
 
     /**
@@ -73,7 +79,10 @@ class Message implements MessageInterface
      */
     public function hasHeader($name)
     {
-        return array_key_exists(strtolower($name), $this->getHeaders());
+        return array_key_exists(
+            strtolower($name),
+            $this->getHeaders()
+        );
     }
 
     /**

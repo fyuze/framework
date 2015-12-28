@@ -76,10 +76,15 @@ class Response extends PsrResponse
      */
     public function send()
     {
-        header('Content-Type: ' . $this->contentType);
-
         foreach ($this->headers as $key => $value) {
-            header("$key: $value");
+            header("$key: " . implode(',', $value));
+        }
+
+        if($this->hasHeader('Content-Type') === false) {
+            header(vsprintf(
+                'Content-Type: %s',
+                $this->hasHeader('Content-Type') ? $this->getHeader('Content-Type') : [$this->contentType]
+            ));
         }
 
         http_response_code($this->getStatusCode());
@@ -88,7 +93,7 @@ class Response extends PsrResponse
             if ($this->compression) {
                 ob_start('ob_gzhandler');
             }
-            echo (string) $this;
+            echo (string)$this->getBody();
         }
     }
 
