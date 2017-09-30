@@ -2,8 +2,9 @@
 
 use Fyuze\Http\Message\Stream;
 use Fyuze\Http\Message\Upload;
+use PHPUnit\Framework\TestCase;
 
-class HttpMessageUploadTest extends PHPUnit_Framework_TestCase
+class HttpMessageUploadTest extends TestCase
 {
     /**
      * @var string

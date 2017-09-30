@@ -1,6 +1,8 @@
 <?php
 
-class ErrorHandlerTest extends PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class ErrorHandlerTest extends TestCase
 {
     public function testHandlesException()
     {
@@ -44,12 +46,13 @@ class ErrorHandlerTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function testSetsExceptionHandler() {
+    public function testSetsExceptionHandler()
+    {
 
         $handler = new \Fyuze\Error\ErrorHandler();
 
         $reflect = new ReflectionClass($handler);
-        $method =$reflect->getMethod('setExceptionHandler');
+        $method = $reflect->getMethod('setExceptionHandler');
         $method->setAccessible(true);
 
 
@@ -65,18 +68,37 @@ class ErrorHandlerTest extends PHPUnit_Framework_TestCase
     /**
      * @expectedException ErrorException
      */
-    public function testSetsErrorHandler() {
+    public function testSetsErrorHandler()
+    {
 
         $handler = new \Fyuze\Error\ErrorHandler();
 
         $reflect = new ReflectionClass($handler);
-        $method =$reflect->getMethod('setErrorHandler');
+        $method = $reflect->getMethod('setErrorHandler');
         $method->setAccessible(true);
 
         /** @var Closure $closure */
         $closure = $method->invoke($handler);
 
         $closure(1, '', '', 1);
+    }
+
+
+    public function testPHPHandlesErrorIfConditionsAreMet()
+    {
+        error_reporting(0);
+        $handler = new \Fyuze\Error\ErrorHandler();
+
+        $reflect = new ReflectionClass($handler);
+        $method = $reflect->getMethod('setErrorHandler');
+        $method->setAccessible(true);
+
+        /** @var Closure $closure */
+        $closure = $method->invoke($handler);
+
+        $result = $closure(0, '', '', 1);
+
+        $this->assertFalse($result);
     }
 }
 

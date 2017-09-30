@@ -2,8 +2,9 @@
 
 use Fyuze\Http\Response;
 use Fyuze\Http\Exception\NotFoundException;
+use PHPUnit\Framework\TestCase;
 
-class KernelApplicationWebTest extends PHPUnit_Framework_TestCase
+class KernelApplicationWebTest extends TestCase
 {
     public function testWebApplicationBootsSuccessfully()
     {

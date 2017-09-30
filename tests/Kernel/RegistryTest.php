@@ -1,8 +1,9 @@
 <?php
 
 use Fyuze\Kernel\Registry;
+use PHPUnit\Framework\TestCase;
 
-class KernelRegistryTest extends \PHPUnit_Framework_TestCase
+class KernelRegistryTest extends TestCase
 {
     public function tearDown()
     {

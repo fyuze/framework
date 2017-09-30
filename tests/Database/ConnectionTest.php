@@ -1,8 +1,9 @@
 <?php
 
 use Fyuze\Database\Connection;
+use PHPUnit\Framework\TestCase;
 
-class ConnectionTest extends \PHPUnit_Framework_TestCase
+class ConnectionTest extends TestCase
 {
     public function testSqliteConnection()
     {
@@ -13,6 +14,8 @@ class ConnectionTest extends \PHPUnit_Framework_TestCase
             'charset' => 'UTF8'
         ]);
 
-        $connection->first('SELECT 1');
+        $result = $connection->first('SELECT 1 as one');
+
+        $this->assertAttributeContains('1', 'one', $result);
     }
 }

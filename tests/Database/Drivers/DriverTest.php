@@ -1,8 +1,9 @@
 <?php
 
 use Fyuze\Database\Drivers\Factory;
+use PHPUnit\Framework\TestCase;
 
-class DatabaseFactoryTest extends \PHPUnit_Framework_TestCase
+class DatabaseFactoryTest extends TestCase
 {
     public function testCreatesMysqlDriver()
     {

@@ -1,6 +1,8 @@
 <?php
 
-class ConfigParserPHPTest extends PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class ConfigParserPHPTest extends TestCase
 {
     public function testParsesPHPFiles()
     {

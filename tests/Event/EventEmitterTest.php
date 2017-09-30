@@ -1,8 +1,9 @@
 <?php
 
 use Fyuze\Event\Emitter;
+use PHPUnit\Framework\TestCase;
 
-class EventEmitterTest extends PHPUnit_Framework_TestCase
+class EventEmitterTest extends TestCase
 {
     public function testEventRegistersAndResolvesSingleEvent()
     {

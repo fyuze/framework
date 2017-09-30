@@ -1,8 +1,9 @@
 <?php
 
 use Fyuze\Http\Message\Message;
+use PHPUnit\Framework\TestCase;
 
-class HttpMessageTest extends PHPUnit_Framework_TestCase
+class HttpMessageTest extends TestCase
 {
     /**
      * @var Message

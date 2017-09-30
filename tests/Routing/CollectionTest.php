@@ -1,8 +1,9 @@
 <?php
 
 use Fyuze\Routing\Collection;
+use PHPUnit\Framework\TestCase;
 
-class RoutingCollectionTest extends PHPUnit_Framework_TestCase
+class RoutingCollectionTest extends TestCase
 {
     public function testCollectionAddsRoutes()
     {

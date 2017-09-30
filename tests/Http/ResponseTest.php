@@ -1,8 +1,9 @@
 <?php
 
 use Fyuze\Http\Response;
+use PHPUnit\Framework\TestCase;
 
-class HttpResponseTest extends PHPUnit_Framework_TestCase
+class HttpResponseTest extends TestCase
 {
     /**
      * @var \Fyuze\Http\Response

@@ -1,7 +1,8 @@
 <?php
 use Fyuze\Debug\Collectors\Response;
+use PHPUnit\Framework\TestCase;
 
-class ResponseCollectorTest extends \PHPUnit_Framework_TestCase
+class ResponseCollectorTest extends TestCase
 {
     public function testCollectorGetsResponse()
     {

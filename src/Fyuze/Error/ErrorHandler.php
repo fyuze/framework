@@ -1,9 +1,10 @@
 <?php
+
 namespace Fyuze\Error;
 
 use Closure;
-use Exception;
 use ErrorException;
+use Exception;
 use Fyuze\Error\Handlers\Exception as ExceptionHandler;
 
 class ErrorHandler implements ErrorHandling
@@ -88,7 +89,7 @@ class ErrorHandler implements ErrorHandling
                 throw new ErrorException($message, 0, $severity, $file, $line);
             }
 
-            return true;
+            return false;
         };
     }
 

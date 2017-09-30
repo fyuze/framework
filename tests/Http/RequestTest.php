@@ -1,8 +1,9 @@
 <?php
 
 use Fyuze\Http\Request;
+use PHPUnit\Framework\TestCase;
 
-class HttpRequestTest extends PHPUnit_Framework_TestCase
+class HttpRequestTest extends TestCase
 {
     public function tearDown()
     {
@@ -35,12 +36,10 @@ class HttpRequestTest extends PHPUnit_Framework_TestCase
 
     public function testGetsHttpHeaders()
     {
-        $request = Request::create();
-       // $this->assertEquals(2, count($request->getHeaders()));
-       // $this->assertEquals('localhost', $request->header('host'));
+        $request = Request::create()->withHeader('host', 'fyuze');
+        $this->assertEquals(1, count($request->getHeaders()));
 
-      //  $request->header('host', 'fyuze');
-      //  $this->assertEquals('fyuze', $request->header('host'));
+        $this->assertEquals('fyuze', $request->getHeaderLine('host'));
 
     }
 
@@ -49,14 +48,14 @@ class HttpRequestTest extends PHPUnit_Framework_TestCase
         $_POST['foo'] = 'bar';
         $request = Request::create();
 
-//        $this->assertArrayHasKey('foo', $request->input());
-  //      $this->assertNull($request->input('bar'));
-  //      $this->assertEquals('bar', $request->input('foo'));
-
-   //     $request->input('bar', '');
-   //     $this->assertArrayHasKey('bar', $request->input());
-   //     $request->input('bar', 'baz');
-   //     $this->assertEquals('baz', $request->input('bar'));
+        $this->assertArrayHasKey('foo', $request->getParsedBody());
+//        $this->assertNull($request->input('bar'));
+//        $this->assertEquals('bar', $request->input('foo'));
+//
+//        $request->input('bar', '');
+//        $this->assertArrayHasKey('bar', $request->input());
+//        $request->input('bar', 'baz');
+//        $this->assertEquals('baz', $request->input('bar'));
     }
 
     public function testResolvesQueryString()
@@ -68,20 +67,7 @@ class HttpRequestTest extends PHPUnit_Framework_TestCase
 
     public function testResolveIp()
     {
-    //    $request = Request::create();
-    //    $this->assertEquals('127.0.0.1', $request->ip());
-
-   //     $request->server('REMOTE_ADDR', '127.0.0.2');
-  //      $this->assertEquals('127.0.0.2', $request->ip());
-
-    //    $request->header('HTTP_X_FORWARDED_FOR', '127.0.0.2,127.0.0.3');
-    //    $this->assertEquals('127.0.0.3', $request->ip());
-    }
-
-    public function testDetectsXmlHttpRequest()
-    {
-    //    $request = Request::create();
-    //    $request->server('HTTP_X_REQUESTED_WITH', 'XMLHttpRequest');
-    //    $this->assertTrue($request->isAjax());
+        $request = Request::create();
+        $this->assertEquals('127.0.0.1', $request->getServerParams()['REMOTE_ADDR']);
     }
 }

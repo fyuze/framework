@@ -1,8 +1,9 @@
 <?php
 
 use Fyuze\Kernel\Application\Web;
+use PHPUnit\Framework\TestCase;
 
-class KernelFyuzeTest extends \PHPUnit_Framework_TestCase
+class KernelFyuzeTest extends TestCase
 {
     public function testWebApplication()
     {
@@ -13,6 +14,7 @@ class KernelFyuzeTest extends \PHPUnit_Framework_TestCase
 
     public function testCliApplication()
     {
+        $this->assertTrue(true);
         //$app = (new Console(__DIR__))->boot();
         //$this->assertTrue($app->isCli());
     }

@@ -1,8 +1,9 @@
 <?php
 
 use Fyuze\Http\Message\Stream;
+use PHPUnit\Framework\TestCase;
 
-class HttpMessageStreamTest extends \PHPUnit_Framework_TestCase
+class HttpMessageStreamTest extends TestCase
 {
     /**
      * @var Stream

@@ -1,8 +1,9 @@
 <?php
 
 use Fyuze\Database\Db;
+use PHPUnit\Framework\TestCase;
 
-class DatabaseDbTest extends \PHPUnit_Framework_TestCase
+class DatabaseDbTest extends TestCase
 {
     public function testQueryFindsFirst()
     {

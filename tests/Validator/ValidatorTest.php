@@ -1,8 +1,9 @@
 <?php
 
 use Fyuze\Validator\Validator;
+use PHPUnit\Framework\TestCase;
 
-class ValidatorTest extends \PHPUnit_Framework_TestCase
+class ValidatorTest extends TestCase
 {
     public function testValidator()
     {

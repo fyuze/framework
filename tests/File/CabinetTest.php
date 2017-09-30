@@ -1,8 +1,9 @@
 <?php
 
 use Fyuze\File\Cabinet;
+use PHPUnit\Framework\TestCase;
 
-class FileCabinetTest extends \PHPUnit_Framework_TestCase
+class FileCabinetTest extends TestCase
 {
     /**
      * @var string

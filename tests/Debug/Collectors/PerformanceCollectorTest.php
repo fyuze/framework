@@ -1,8 +1,9 @@
 <?php
 
 use Fyuze\Debug\Collectors\Performance;
+use PHPUnit\Framework\TestCase;
 
-class PerformanceCollectorTest extends \PHPUnit_Framework_TestCase
+class PerformanceCollectorTest extends TestCase
 {
     public function testCollectorGetsExecutionTime()
     {
