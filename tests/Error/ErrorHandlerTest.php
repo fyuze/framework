@@ -96,7 +96,9 @@ class ErrorHandlerTest extends TestCase
         /** @var Closure $closure */
         $closure = $method->invoke($handler);
 
-        $closure(0, '', '', 1);
+        $result = $closure(0, '', '', 1);
+
+        $this->assertFalse($result);
     }
 }
 

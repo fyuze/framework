@@ -14,6 +14,8 @@ class ConnectionTest extends TestCase
             'charset' => 'UTF8'
         ]);
 
-        $connection->first('SELECT 1');
+        $result = $connection->first('SELECT 1 as one');
+
+        $this->assertAttributeContains('1', 'one', $result);
     }
 }
