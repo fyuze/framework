@@ -1,8 +1,9 @@
 <?php
 
 use Fyuze\Http\Request;
+use PHPUnit\Framework\TestCase;
 
-class HttpRequestTest extends PHPUnit_Framework_TestCase
+class HttpRequestTest extends TestCase
 {
     public function tearDown()
     {

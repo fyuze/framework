@@ -2,8 +2,9 @@
 namespace Debug;
 
 use Fyuze\Debug\Timer;
+use PHPUnit\Framework\TestCase;
 
-class DebugTimerTest extends \PHPUnit_Framework_TestCase
+class DebugTimerTest extends TestCase
 {
     /**
      * @dataProvider dataSets

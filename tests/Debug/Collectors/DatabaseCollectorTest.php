@@ -1,6 +1,8 @@
 <?php
 
-class DatabaseCollectorTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class DatabaseCollectorTest extends TestCase
 {
     public function testCollectorGetsQueries()
     {

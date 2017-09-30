@@ -1,8 +1,9 @@
 <?php
 
 use Fyuze\Kernel\Application\Web;
+use PHPUnit\Framework\TestCase;
 
-class KernelFyuzeTest extends \PHPUnit_Framework_TestCase
+class KernelFyuzeTest extends TestCase
 {
     public function testWebApplication()
     {

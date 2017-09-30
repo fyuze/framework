@@ -3,8 +3,9 @@
 use Fyuze\Http\Response;
 use Fyuze\Routing\Route;
 use Fyuze\Http\Message\ServerRequest as Request;
+use PHPUnit\Framework\TestCase;
 
-class RouteTest extends PHPUnit_Framework_TestCase
+class RouteTest extends TestCase
 {
 
     public function testClosureRoute()

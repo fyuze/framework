@@ -1,8 +1,9 @@
 <?php
 
 use Fyuze\View\View;
+use PHPUnit\Framework\TestCase;
 
-class ViewTest extends PHPUnit_Framework_TestCase
+class ViewTest extends TestCase
 {
     public function testParsesPhpFile()
     {

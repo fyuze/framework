@@ -3,12 +3,12 @@
   "description": "Fyuze framework",
   "license": "MIT",
   "require": {
-    "php": ">=5.5",
+    "php": ">=7.0",
     "psr/log": "1.0.*",
     "psr/http-message": "1.*"
   },
   "require-dev": {
-    "phpunit/phpunit": "4.8.*",
+    "phpunit/phpunit": "6.*",
     "mockery/mockery": "0.9.*"
   },
   "autoload": {

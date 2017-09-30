@@ -1,8 +1,9 @@
 <?php
 
 use Fyuze\Database\Connection;
+use PHPUnit\Framework\TestCase;
 
-class ConnectionTest extends \PHPUnit_Framework_TestCase
+class ConnectionTest extends TestCase
 {
     public function testSqliteConnection()
     {

@@ -1,8 +1,9 @@
 <?php
 
 use Fyuze\Database\Drivers\Mysql;
+use PHPUnit\Framework\TestCase;
 
-class MysqlTest extends \PHPUnit_Framework_TestCase
+class MysqlTest extends TestCase
 {
     public function testDriverResolvesDsn()
     {

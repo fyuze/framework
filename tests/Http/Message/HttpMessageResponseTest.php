@@ -1,7 +1,8 @@
 <?php
 use Fyuze\Http\Message\Response;
+use PHPUnit\Framework\TestCase;
 
-class HttpMessageResponseTest extends \PHPUnit_Framework_TestCase
+class HttpMessageResponseTest extends TestCase
 {
     public function testWithStatusReturnsNewInstance()
     {

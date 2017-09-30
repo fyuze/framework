@@ -1,7 +1,8 @@
 <?php
 use Fyuze\Http\Message\Uri;
+use PHPUnit\Framework\TestCase;
 
-class HttpMessageUriTest extends \PHPUnit_Framework_TestCase
+class HttpMessageUriTest extends TestCase
 {
     /**
      * @var Uri

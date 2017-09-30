@@ -2,8 +2,9 @@
 
 use Fyuze\Http\Message\Request;
 use Fyuze\Http\Message\Uri;
+use PHPUnit\Framework\TestCase;
 
-class HttpMessageRequestTest extends PHPUnit_Framework_TestCase
+class HttpMessageRequestTest extends TestCase
 {
     /**
      * @var Request

@@ -1,8 +1,9 @@
 <?php
 
 use Fyuze\Http\Message\ServerRequest;
+use PHPUnit\Framework\TestCase;
 
-class HttpMessageServerTest extends PHPUnit_Framework_TestCase
+class HttpMessageServerTest extends TestCase
 {
     /**
      * @var ServerRequest

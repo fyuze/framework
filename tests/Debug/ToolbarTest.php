@@ -4,8 +4,9 @@ namespace Debug;
 use Fyuze\Debug\Collectors\Response as ResponseCollector;
 use Fyuze\Debug\Toolbar;
 use Fyuze\Http\Response;
+use PHPUnit\Framework\TestCase;
 
-class ToolbarTest extends \PHPUnit_Framework_TestCase
+class ToolbarTest extends TestCase
 {
     public function testToolbarRegisteresCollectorsAndRenders()
     {
