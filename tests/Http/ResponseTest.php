@@ -68,4 +68,14 @@ class HttpResponseTest extends TestCase
         $this->response->getBody()->write('foo');
         $this->assertEquals('foo', (string)$this->response);
     }
+
+    public function testResponseSend() {
+        $responseWithHeader = $this->response->withHeader('Foo', 'bar');
+        ob_start();
+        $responseWithHeader->getBody()->write('foo');
+        $responseWithHeader->send();
+        $output = ob_get_contents();
+        $this->assertEquals('foo', $output);
+        ob_end_clean();
+    }
 }

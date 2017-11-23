@@ -69,10 +69,6 @@ class Response extends PsrResponse
 
     /**
      * Sends the response
-     * We ignore coverage here because
-     * headers cannot be tested in cli sapi
-     *
-     * @codeCoverageIgnore
      */
     public function send()
     {
@@ -95,6 +91,8 @@ class Response extends PsrResponse
             }
             echo (string)$this->getBody();
         }
+
+        ob_end_flush();
     }
 
     /**
