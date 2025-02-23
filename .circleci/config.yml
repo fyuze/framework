@@ -5,7 +5,7 @@ orbs:
 jobs:
   test-php:
     docker:
-      - image: cimg/php:8.2.7-node
+      - image: cimg/php:8.4.4
     steps:
       - checkout
       - php/install-packages
