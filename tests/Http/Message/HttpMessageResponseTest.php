@@ -10,11 +10,9 @@ class HttpMessageResponseTest extends TestCase
         $this->assertNotSame($response, $response->withStatus(404));
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testWithStatusThrowsExceptionOnInvalidCode()
     {
+        $this->expectException(\InvalidArgumentException::class);
         (new Response)->withStatus(999);
     }
 

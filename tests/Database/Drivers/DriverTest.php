@@ -3,7 +3,7 @@
 use Fyuze\Database\Drivers\Factory;
 use PHPUnit\Framework\TestCase;
 
-class DatabaseFactoryTest extends TestCase
+class DriverTest extends TestCase
 {
     public function testCreatesMysqlDriver()
     {
@@ -28,19 +28,15 @@ class DatabaseFactoryTest extends TestCase
         $this->assertInstanceOf('Fyuze\Database\Drivers\Sqlite', $driver);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testThrowsExceptionForNonexistentDriver()
     {
+        $this->expectException(\InvalidArgumentException::class);
         Factory::create(['driver' => 'foo']);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testThrowsExceptionWithoutDriverSpecified()
     {
+        $this->expectException(\InvalidArgumentException::class);
         Factory::create([]);
     }
 }

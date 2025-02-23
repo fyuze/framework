@@ -124,7 +124,7 @@ class Registry
      */
     protected function locate($key, $member)
     {
-        $aliases = array_filter($this->members, function (&$n) use ($member) {
+        $aliases = array_filter($this->members, function ($n) use ($member) {
             if ($n instanceof Closure) {
                 return $n($this) instanceof $member;
             }

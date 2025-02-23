@@ -15,11 +15,9 @@ class ConfigParserPHPTest extends TestCase
         $this->assertArrayHasKey('charset', $config);
     }
 
-    /**
-     * @expectedException RuntimeException
-     */
     public function testThrowsExceptionOnInvalidConfig()
     {
+        $this->expectException(RuntimeException::class);
         $parser = new \Fyuze\Config\Parsers\PHP();
 
         $path = realpath(__DIR__ . '/../../mocks/app/config/invalid/php') . '/app.php';

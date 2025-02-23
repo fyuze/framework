@@ -21,6 +21,11 @@ class Logger extends AbstractLogger implements LoggerInterface
     protected $logs = [];
 
     /**
+     * @var string
+     */
+    protected $name;
+
+    /**
      * Logger constructor.
      *
      * @param $name

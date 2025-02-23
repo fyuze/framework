@@ -8,6 +8,8 @@ class Timer
      */
     protected $timers;
 
+    protected $current;
+
     /**
      * @param string $name
      * @return float

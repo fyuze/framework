@@ -2,15 +2,15 @@
 namespace Debug;
 
 use Fyuze\Debug\Timer;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class DebugTimerTest extends TestCase
 {
-    /**
-     * @dataProvider dataSets
-     */
-    public function testTimerReturnsAFloatIGuess($name)
+    #[DataProvider('dataSets')]
+    public function testTimerReturnsAFloat()
     {
+        $name = 'TimerTest';
         $timer = new Timer();
 
         $timer->start($name);
@@ -22,7 +22,7 @@ class DebugTimerTest extends TestCase
         $this->assertTrue($stop > $start);
     }
 
-    public function testCodeWorksInClosureForSomeReason()
+    public function testCodeWorksInClosure()
     {
         $timer = new Timer;
 
@@ -45,7 +45,7 @@ class DebugTimerTest extends TestCase
     }
 
 
-    public function dataSets()
+    public static function dataSets()
     {
         return [['bob', 'marley', 'jojo',' default']];
     }

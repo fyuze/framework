@@ -54,7 +54,7 @@ class DatabaseDbTest extends TestCase
         $db = new DB($conn);
 
         $query = $db->all('SELECT * FROM users WHERE name = ?', ['matthew']);
-        $this->assertEquals(1, count($query));
+        $this->assertCount(1, $query);
     }
 
     public function testWriteQuery()
@@ -83,13 +83,17 @@ class DatabaseDbTest extends TestCase
         $this->assertEquals(1, $query);
     }
 
-    public function testSuccessfulDbTransaction()
+    public function testDatabaseTransaction()
     {
+
+        $statement = Mockery::mock('\PDOStatement');
+        $statement->shouldReceive('execute')->once()->andReturnTrue();
+
         $pdo = Mockery::mock('\PDO');
-        $pdo->shouldReceive('beginTransaction')->once()->andReturnNull();
-        $pdo->shouldReceive('prepare')->times(3)->andReturnSelf();
-        $pdo->shouldReceive('execute')->times(3)->andReturn(true);
-        $pdo->shouldReceive('commit')->once()->andReturn(true);
+        $pdo->shouldReceive('beginTransaction')->once()->andReturnTrue();
+        $pdo->shouldReceive('prepare')->times(3)->andReturn($statement);
+        $pdo->shouldReceive('execute')->times(3)->andReturnTrue();
+        $pdo->shouldReceive('commit')->once()->andReturnTrue();
 
         $conn = Mockery::mock('\Fyuze\Database\Drivers\ConnectionInterface');
         $conn->shouldReceive('open')->once()->andReturn($pdo);
@@ -111,7 +115,7 @@ class DatabaseDbTest extends TestCase
         $statement->shouldReceive('execute')->once()->andThrow(new \Exception('woopsies'));
 
         $pdo = Mockery::mock('\PDO');
-        $pdo->shouldReceive('beginTransaction')->once()->andReturnNull();
+        $pdo->shouldReceive('beginTransaction')->once()->andReturn(true);
         $pdo->shouldReceive('prepare')->times(3)->andReturn($statement);
         $pdo->shouldReceive('execute')->times(3)->andReturn();
         $pdo->shouldReceive('commit')->once()->andReturn();
@@ -143,7 +147,7 @@ class DatabaseDbTest extends TestCase
     {
         $statement = Mockery::mock('\PDOStatement');
         $statement->shouldReceive('execute')->once()
-            ->andReturnSelf();
+            ->andReturn(true);
 
         $pdo = Mockery::mock('\PDO');
         $pdo->shouldReceive('prepare')->once()
@@ -156,14 +160,15 @@ class DatabaseDbTest extends TestCase
         $db = new Db($conn);
 
         $query = $db->query('SET NAMES UTF-8');
-        $this->assertInstanceOf('\PDOSTatement', $query);
+        $this->assertTrue($query);
+//        $this->assertInstanceOf('\PDOSTatement', $query);
     }
 
     public function testCountsCorrectNumberOfExecutedQueries()
     {
         $statement = Mockery::mock('\PDOStatement');
         $statement->shouldReceive('execute')->once()
-            ->andReturnSelf();
+            ->andReturnTrue();
 
         $pdo = Mockery::mock('\PDO');
         $pdo->shouldReceive('prepare')->twice()
@@ -175,8 +180,8 @@ class DatabaseDbTest extends TestCase
 
         $db = new Db($conn);
 
-        $query = $db->query('SELECT 1');
-        $query = $db->query('SELECT 1');
+        $db->query('SELECT 1');
+        $db->query('SELECT 1');
         $this->assertCount(2, $db->getQueries());
     }
 }

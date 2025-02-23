@@ -20,7 +20,7 @@ class Debug extends Service
     }
 
     /**
-     * @return mixed
+     * @return void
      */
     public function services()
     {

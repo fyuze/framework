@@ -1,6 +1,7 @@
 <?php
 
 use Fyuze\Http\Message\Stream;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class HttpMessageStreamTest extends TestCase
@@ -15,20 +16,20 @@ class HttpMessageStreamTest extends TestCase
      */
     protected $tmp;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->stream = new Stream('php://memory', 'w+');
         $this->tmp = tempnam(sys_get_temp_dir(), 'fyuze');
     }
 
-    public function getReadableModes()
+    public static function getReadableModes()
     {
         return [
             ['r', 'r+', 'w+', 'a+', 'x+', 'c+'],
         ];
     }
 
-    public function getWriteableModes()
+    public static function getWriteableModes()
     {
         return [
             ['r+', 'w', 'w+', 'a', 'a+', 'x', 'x+', 'c', 'c+'],
@@ -70,11 +71,9 @@ class HttpMessageStreamTest extends TestCase
         $this->assertNull($this->stream->close());
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testAttachFailsWithoutResource()
     {
+        $this->expectException(InvalidArgumentException::class);
         $this->stream->attach('');
     }
 
@@ -110,11 +109,9 @@ class HttpMessageStreamTest extends TestCase
         $this->assertEquals(5, $this->stream->tell());
     }
 
-    /**
-     * @expectedException RuntimeException
-     */
     public function testTellFailsWhenStreamDetached()
     {
+        $this->expectException(RuntimeException::class);
         $stream = new Stream('php://memory');
         $stream->detach();
         $stream->tell();
@@ -165,11 +162,9 @@ class HttpMessageStreamTest extends TestCase
         $this->assertEquals(2, $this->stream->tell());
     }
 
-    /**
-     * @expectedException RuntimeException
-     */
     public function testSeekThrowsExceptionWhenDetached()
     {
+        $this->expectException(RuntimeException::class);
         $stream = new Stream('php://memory');
         $stream->detach();
         $stream->seek(1);
@@ -185,9 +180,9 @@ class HttpMessageStreamTest extends TestCase
     }
 
     /**
-     * @dataProvider getReadableModes
      * @param $mode
      */
+    #[DataProvider('getReadableModes')]
     public function testValidReadableModesReturnTrue($mode)
     {
         $stream = new Stream('php://memory', $mode);
@@ -196,9 +191,9 @@ class HttpMessageStreamTest extends TestCase
     }
 
     /**
-     * @dataProvider getWriteableModes
      * @param $mode
      */
+    #[DataProvider('getWriteableModes')]
     public function testWriteableModes($mode)
     {
         $stream = new Stream('php://memory', $mode);
@@ -217,11 +212,9 @@ class HttpMessageStreamTest extends TestCase
         $this->assertEquals(6, $this->stream->write('foobar'));
     }
 
-    /**
-     * @expectedException RuntimeException
-     */
     public function testWriteOnReadStreamThrowsException()
     {
+        $this->expectException(RuntimeException::class);
         $stream = new Stream('php://memory');
         $stream->write('foobar');
     }
@@ -234,11 +227,9 @@ class HttpMessageStreamTest extends TestCase
         $this->assertEquals('foobar', $this->stream->read(100));
     }
 
-    /**
-     * @expectedException RuntimeException
-     */
     public function testReadThrowsExceptionIfNotReadable()
     {
+        $this->expectException(RuntimeException::class);
         $stream = new Stream($this->tmp, 'w');
         $stream->read(100);
     }
@@ -252,11 +243,9 @@ class HttpMessageStreamTest extends TestCase
         $this->assertEquals('foobar', $stream->getContents());
     }
 
-    /**
-     * @expectedException RuntimeException
-     */
     public function testGetContentsThrowsExceptionIfNotReadable()
     {
+        $this->expectException(RuntimeException::class);
         $stream = new Stream($this->tmp, 'w');
         $stream->getContents();
     }
