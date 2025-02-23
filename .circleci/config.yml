@@ -11,6 +11,8 @@ jobs:
       - run:
           name: run tests
           command: |
+            sudo pecl channel-update pecl.php.net
+            sudo pecl install xdebug && sudo docker-php-ext-enable xdebug
             ./vendor/bin/phpunit --coverage-clover=coverage.clover
             wget https://scrutinizer-ci.com/ocular.phar
             php ocular.phar code-coverage:upload --format=php-clover coverage.clover
