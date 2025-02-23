@@ -1,0 +1,33 @@
+version: 2.1
+orbs:
+  php: circleci/php@1
+jobs:
+  test-php:
+    docker:
+      - image: cimg/php:8.4.4
+    steps:
+      - checkout
+      - php/install-packages
+      - run:
+          name: run tests
+          command: |
+            sudo pecl channel-update pecl.php.net
+            sudo pecl install xdebug && sudo docker-php-ext-enable xdebug
+            ./vendor/bin/phpunit --coverage-clover=coverage.clover
+            ./vendor/bin/ocular code-coverage:upload --format=php-clover coverage.clover
+          environment:
+            XDEBUG_MODE: coverage
+      - store_artifacts:
+          path: /tmp/artifacts
+  deploy:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - run:
+          name: deploy
+          command: "#e.g. ./deploy.sh"
+workflows:
+  build-and-test:
+    jobs:
+      - test-php:
+          context: []
