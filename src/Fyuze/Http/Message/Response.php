@@ -109,7 +109,7 @@ class Response extends Message implements ResponseInterface
     {
         $instance = clone $this;
         $code = (int)$code;
-        if (is_float($code) || $code < 100 || $code >= 600) {
+        if ($code < 100 || $code >= 600) {
             throw new \InvalidArgumentException(sprintf('Invalid status code %d', $code));
         }
 

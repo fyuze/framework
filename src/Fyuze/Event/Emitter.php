@@ -52,7 +52,7 @@ class Emitter
     /**
      * @param $name
      * @param array $params
-     * @return mixed
+     * @return void
      * @throws InvalidArgumentException
      */
     public function emit($name, $params = null)

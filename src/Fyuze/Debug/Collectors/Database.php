@@ -10,6 +10,8 @@ class Database implements Collector
      */
     protected $database;
 
+    protected $db;
+
     /**
      * Database constructor.
      * @param Db $database
@@ -24,6 +26,8 @@ class Database implements Collector
      */
     public function tab()
     {
-        return ['title' => count($this->db->getQueries()) . ' Queries'];
+        return [
+            'title' => count($this->db->getQueries()) . ' Queries'
+        ];
     }
 }

@@ -9,7 +9,7 @@ class HttpMessageUriTest extends TestCase
      */
     protected $uri;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->uri = new Uri();
     }
@@ -71,11 +71,9 @@ class HttpMessageUriTest extends TestCase
         $this->assertEquals('http', $uri->getScheme());
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testThrowsExceptionForInvalidSchemes()
     {
+        $this->expectException(InvalidArgumentException::class);
         $uri = $this->uri->withScheme('foo');
     }
 
@@ -103,11 +101,9 @@ class HttpMessageUriTest extends TestCase
         $this->assertEquals(123, $uri->getPort());
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testOutofBoundsPortsThrowsException()
     {
+        $this->expectException(InvalidArgumentException::class);
         $this->uri->withPort(800000);
     }
 
@@ -133,19 +129,15 @@ class HttpMessageUriTest extends TestCase
         $this->assertEquals('foo%20bar', $this->uri->withFragment('foo%20bar')->getFragment());
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testExceptionThrownOnPathWithInvalidType()
     {
+        $this->expectException(InvalidArgumentException::class);
         $this->uri->withPath(123);
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testExceptionThrownWithFragmentInPath()
     {
+        $this->expectException(InvalidArgumentException::class);
         $this->uri->withPath('foo#bar');
     }
 
@@ -190,11 +182,9 @@ class HttpMessageUriTest extends TestCase
         $this->assertEquals('fyuze.local/foo?bar=baz#qaz', (string)$uri);
     }
 
-    /**
-     * @expectedException RuntimeException
-     */
     public function testThrowsExceptionWhenUnableToParseUrl()
     {
+        $this->expectException(RuntimeException::class);
         new Uri('http:///fyuze.io');
     }
 }

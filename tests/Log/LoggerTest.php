@@ -17,11 +17,9 @@ class LoggerTest extends TestCase
         $this->assertSame("[alert] hi, it's an alert", (string)$logger);
     }
 
-    /**
-     * @expectedException RuntimeException
-     */
     public function testLoggerThrowsExceptionWithoutHandler()
     {
+        $this->expectException(RuntimeException::class);
         $logger = new Logger('foo');
         $logger->alert('hi, it\'s an alert');
     }

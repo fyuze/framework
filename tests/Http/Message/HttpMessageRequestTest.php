@@ -3,6 +3,7 @@
 use Fyuze\Http\Message\Request;
 use Fyuze\Http\Message\Uri;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class HttpMessageRequestTest extends TestCase
 {
@@ -11,12 +12,12 @@ class HttpMessageRequestTest extends TestCase
      */
     protected $request;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->request = new Request;
     }
 
-    public function defaultMethodsAndValues()
+    public static function defaultMethodsAndValues()
     {
         return [
             ['getRequestTarget', '/'],
@@ -25,9 +26,7 @@ class HttpMessageRequestTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider defaultMethodsAndValues
-     */
+    #[DataProvider('defaultMethodsAndValues')]
     public function testGettersReturnExpectedDefaultValues($method, $expected)
     {
         $this->assertEquals($expected, $this->request->{$method}());
@@ -50,7 +49,7 @@ class HttpMessageRequestTest extends TestCase
         $this->assertEquals('/foo?bar=baz', $request->getRequestTarget());
     }
 
-    public function requestMethods()
+    public static function requestMethods()
     {
         return [
             ['GET'],
@@ -62,20 +61,16 @@ class HttpMessageRequestTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider requestMethods
-     */
+    #[DataProvider('requestMethods')]
     public function testAllValidRequestMethodsCanBeUsed($method)
     {
         $request = $this->request->withMethod($method);
         $this->assertEquals($method, $request->getMethod());
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testInvalidRequestMethodThrowsException()
     {
+        $this->expectException(InvalidArgumentException::class);
         $this->request->withMethod('FOO');
     }
 

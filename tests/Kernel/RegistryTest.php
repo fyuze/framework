@@ -5,10 +5,10 @@ use PHPUnit\Framework\TestCase;
 
 class KernelRegistryTest extends TestCase
 {
-    public function tearDown()
+    public function tearDown(): void
     {
         $registry = Registry::init();
-        $registry->dump();
+        $registry::dump();
     }
 
     public function testRegistryIsSingleton()
@@ -58,11 +58,9 @@ class KernelRegistryTest extends TestCase
         $this->assertSame($foo, $test->getFoo());
     }
 
-    /**
-     * @expectedException ReflectionException
-     */
     public function testMakeInvalidMember()
     {
+        $this->expectException(ReflectionException::class);
         $registry = Registry::init();
         $registry->make('this will fail');
     }

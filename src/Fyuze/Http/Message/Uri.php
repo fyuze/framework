@@ -303,7 +303,7 @@ class Uri implements UriInterface
         $fragment = $this->getFragment();
 
         return ($scheme ? $scheme . '://' : '')
-        . ($authority ? '' . $authority : '')
+        . ($authority ?: '')
         . $path
         . ($query ? '?' . $query : '')
         . ($fragment ? '#' . $fragment : '');

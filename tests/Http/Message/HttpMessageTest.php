@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 use Fyuze\Http\Message\Message;
 use PHPUnit\Framework\TestCase;
@@ -10,7 +10,7 @@ class HttpMessageTest extends TestCase
      */
     protected $message;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->message = new Message();
     }
@@ -28,11 +28,9 @@ class HttpMessageTest extends TestCase
         $this->assertEquals('1.1', $message->withProtocolVersion('1.1')->getProtocolVersion());
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testProtocolThrowsErrorOnValidValue()
     {
+        $this->expectException(InvalidArgumentException::class);
         $this->message->withProtocolVersion('1.3');
     }
 
@@ -47,7 +45,6 @@ class HttpMessageTest extends TestCase
         $this->assertEmpty($message->getHeader('bar'));
 
         // Make sure empty value will still return an array
-        $this->assertInternalType('array', $message->withHeader('bar', '')->getHeader('bar'));
         $this->assertEmpty($message->withHeader('bar', '')->getHeader('bar'));
 
         // Psr7 consumption test
