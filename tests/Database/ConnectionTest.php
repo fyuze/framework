@@ -16,6 +16,10 @@ class ConnectionTest extends TestCase
 
         $result = $connection->first('SELECT 1 as one');
 
-        $this->assertAttributeContains('1', 'one', $result);
+        $object = new StdClass();
+        $object->one = 1;
+
+
+        $this->assertEquals($object, $result);
     }
 }

@@ -5,7 +5,7 @@ use PHPUnit\Framework\TestCase;
 
 class HttpRequestTest extends TestCase
 {
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($_SERVER['REQUEST_URI']);
         parent::tearDown();

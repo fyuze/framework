@@ -1,9 +1,11 @@
 <?php
 
+use PHPUnit\Framework\Attributes\WithoutErrorHandler;
 use PHPUnit\Framework\TestCase;
 
 class ErrorHandlerTest extends TestCase
 {
+    #[WithoutErrorHandler]
     public function testHandlesException()
     {
         $handler = new \Fyuze\Error\ErrorHandler();
@@ -12,9 +14,10 @@ class ErrorHandlerTest extends TestCase
 
         $handler->handle(new Exception('exception handled'));
 
-        $this->assertEquals('exception handled', ob_get_clean());
+        $this->assertSame('exception handled', ob_get_clean());
     }
 
+    #[WithoutErrorHandler]
     public function testHandlesWithRegisteredHandler()
     {
         $handler = new \Fyuze\Error\ErrorHandler();
@@ -29,9 +32,10 @@ class ErrorHandlerTest extends TestCase
 
         $handler->handle(new TestException($message));
 
-        $this->assertEquals($message, ob_get_clean());
+        $this->assertSame($message, ob_get_clean());
     }
 
+    #[WithoutErrorHandler]
     public function testCatchesHandlersThrowingErrors()
     {
         $handler = new \Fyuze\Error\ErrorHandler();
@@ -46,9 +50,9 @@ class ErrorHandlerTest extends TestCase
         );
     }
 
+    #[WithoutErrorHandler]
     public function testSetsExceptionHandler()
     {
-
         $handler = new \Fyuze\Error\ErrorHandler();
 
         $reflect = new ReflectionClass($handler);
@@ -62,14 +66,14 @@ class ErrorHandlerTest extends TestCase
 
         ob_start();
         $closure->__invoke(new \Exception($message));
-        $this->assertEquals($message, ob_get_clean());
+        restore_exception_handler();
+        $this->assertSame($message, ob_get_clean());
     }
 
-    /**
-     * @expectedException ErrorException
-     */
+    #[WithoutErrorHandler]
     public function testSetsErrorHandler()
     {
+        $this->expectException(ErrorException::class);
 
         $handler = new \Fyuze\Error\ErrorHandler();
 
@@ -83,7 +87,7 @@ class ErrorHandlerTest extends TestCase
         $closure(1, '', '', 1);
     }
 
-
+    #[WithoutErrorHandler]
     public function testPHPHandlesErrorIfConditionsAreMet()
     {
         error_reporting(0);

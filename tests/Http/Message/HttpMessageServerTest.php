@@ -1,6 +1,7 @@
 <?php
 
 use Fyuze\Http\Message\ServerRequest;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class HttpMessageServerTest extends TestCase
@@ -10,12 +11,12 @@ class HttpMessageServerTest extends TestCase
      */
     protected $server;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->server = new ServerRequest();
     }
 
-    public function getterProvider()
+    public static function getterProvider()
     {
         return [
             ['getServerParams'], ['getCookieParams'], ['getQueryParams'],
@@ -23,7 +24,7 @@ class HttpMessageServerTest extends TestCase
         ];
     }
 
-    public function mutableProvider()
+    public static function mutableProvider()
     {
         return [
             ['withCookieParams'], ['withQueryParams'],
@@ -31,17 +32,13 @@ class HttpMessageServerTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider getterProvider
-     */
+    #[DataProvider('getterProvider')]
     public function testDefaultGetterValues($method)
     {
         $this->assertEmpty($this->server->{$method}());
     }
 
-    /**
-     * @dataProvider mutableProvider
-     */
+    #[DataProvider('mutableProvider')]
     public function testWithMethodsAreImmutable($method)
     {
         $server = $this->server->{$method}(['foo' => 'bar']);

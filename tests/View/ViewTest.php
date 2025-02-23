@@ -1,6 +1,7 @@
 <?php
 
 use Fyuze\View\View;
+use PHPUnit\Framework\Attributes\WithoutErrorHandler;
 use PHPUnit\Framework\TestCase;
 
 class ViewTest extends TestCase
@@ -27,6 +28,7 @@ class ViewTest extends TestCase
         $this->assertEquals('Hello, Matthew', $view->render());
     }
 
+    #[WithoutErrorHandler]
     public function testCatchesExceptionThrownInView()
     {
         $view = new View(__DIR__ . '/../mocks/app/views/error.php');
@@ -34,11 +36,10 @@ class ViewTest extends TestCase
         $this->assertEquals('you shall not pass', (string) $view);
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
+
     public function testThrowsExceptionOnInvalidView()
     {
+        $this->expectException(InvalidArgumentException::class);
         new View('');
     }
 }

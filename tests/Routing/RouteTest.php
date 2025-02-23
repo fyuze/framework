@@ -80,11 +80,9 @@ class RouteTest extends TestCase
         $this->assertEquals('Hello, Matthew!',(string) call_user_func_array([new $controller, $method], ['Matthew']));
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testBadControllerRoute()
     {
+        $this->expectException(InvalidArgumentException::class);
         $route = new Route('/', 'index', 'FakeController@indexAction');
         $route->getAction();
     }

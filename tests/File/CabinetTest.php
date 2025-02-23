@@ -15,7 +15,7 @@ class FileCabinetTest extends TestCase
      */
     protected $cabinet;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->path = __DIR__ . '/mock';
     }
@@ -78,21 +78,17 @@ class FileCabinetTest extends TestCase
         }
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testFilterThrowsExceptionOnInvalidRules()
     {
+        $this->expectException(InvalidArgumentException::class);
         $cabinet = (new Cabinet())
             ->only('foobar')
             ->in($this->path);
     }
 
-    /**
-     * @expectedException RuntimeException
-     */
     public function testExceptionIsThrownOnInvalidDirectory()
     {
+        $this->expectException(RuntimeException::class);
         $cabinet = (new Cabinet())
             ->in('foobar');
     }

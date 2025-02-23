@@ -10,7 +10,7 @@ class HttpResponseTest extends TestCase
      */
     protected $response;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->response = Response::create();
     }

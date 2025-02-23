@@ -18,7 +18,7 @@ class Db
      *
      * @var array
      */
-    protected $queries = [];
+    protected array $queries = [];
 
     /**
      * @param ConnectionInterface $connection
@@ -31,7 +31,7 @@ class Db
     /**
      * @return array
      */
-    public function getQueries()
+    public function getQueries(): array
     {
         return $this->queries;
     }
@@ -74,17 +74,11 @@ class Db
         $this->connection->beginTransaction();
 
         try {
-
             $queries($this);
-
             $this->connection->commit();
-
             return true;
-
         } catch (Exception $e) {
-
             $this->connection->rollback();
-
             return false;
         }
     }
@@ -103,11 +97,10 @@ class Db
         $result = $statement->execute($params);
 
         if ($this->isRead($query)) {
-
             return $statement;
+        }
 
-        } elseif ($this->isWrite($query)) {
-
+        if ($this->isWrite($query)) {
             return $statement->rowCount();
         }
 

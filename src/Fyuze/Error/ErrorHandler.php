@@ -20,8 +20,10 @@ class ErrorHandler implements ErrorHandling
     public function __construct()
     {
         register_shutdown_function($this->handleFatalError());
-        set_error_handler($this->setErrorHandler());
-        set_exception_handler($this->setExceptionHandler());
+        if(getenv('APP_ENV') !== 'testing') {
+            set_error_handler($this->setErrorHandler());
+            set_exception_handler($this->setExceptionHandler());
+        }
 
         $this->register('Exception', function (Exception $exception) {
             $handler = new ExceptionHandler($exception);
@@ -102,7 +104,7 @@ class ErrorHandler implements ErrorHandling
         return function () {
             $error = error_get_last();
 
-            if ($error['type'] === E_ERROR) {
+            if ($error && $error['type'] === E_ERROR) {
                 $this->handle(new ErrorException($error['message']));
             }
         };

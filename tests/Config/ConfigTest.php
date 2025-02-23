@@ -13,7 +13,7 @@ class ConfigTest extends TestCase
     /**
      * Setup override
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -53,11 +53,10 @@ class ConfigTest extends TestCase
         $this->assertEquals('baz', $this->config->get('foo.bar'));
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testConfigInvalidPath()
     {
+        $this->expectException(InvalidArgumentException::class);
+
         new Config('fakepath', 'prod');
     }
 }

@@ -56,7 +56,7 @@ class Kernel
         } catch (\Exception $e) {
 
             $response = Response::create(
-                sprintf('<body>An unkown error has occurred: %s</body>', $e->getMessage()),
+                sprintf('<body>An unknown error has occurred: %s</body>', $e->getMessage()),
                 500
             );
         }
@@ -86,7 +86,7 @@ class Kernel
 
         foreach (array_filter($reflect->getMethod($method)->getParameters(), $this->getParams()) as $param) {
             array_unshift($params, $this->registry->make(
-                $param->getClass()->getName()
+                (string) $param->getType()
             ));
         }
 
@@ -102,7 +102,7 @@ class Kernel
     protected function getParams()
     {
         return function (ReflectionParameter $param) {
-            return $param->getClass();
+            return (string) $param->getType();
         };
     }
 }

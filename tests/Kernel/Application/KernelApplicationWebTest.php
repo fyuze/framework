@@ -47,7 +47,7 @@ class KernelApplicationWebTest extends TestCase
 
         $this->assertInstanceOf('Fyuze\Http\Response', $response);
         $this->assertEquals(500, $response->getStatusCode());
-        $this->assertEquals('<body>An unkown error has occurred: stuff broke</body>', $response->getBody());
+        $this->assertEquals('<body>An unknown error has occurred: stuff broke</body>', $response->getBody());
     }
 }
 

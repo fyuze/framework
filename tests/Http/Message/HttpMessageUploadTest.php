@@ -2,6 +2,7 @@
 
 use Fyuze\Http\Message\Stream;
 use Fyuze\Http\Message\Upload;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class HttpMessageUploadTest extends TestCase
@@ -11,12 +12,12 @@ class HttpMessageUploadTest extends TestCase
      */
     protected $tmp;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->tmp = tempnam(sys_get_temp_dir(), 'fyuze');
     }
 
-    public function constructorProviders()
+    public static function constructorProviders()
     {
         return [
             [new Upload(fopen('php://temp', 'w+'))],
@@ -25,9 +26,7 @@ class HttpMessageUploadTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider constructorProviders
-     */
+    #[DataProvider('constructorProviders')]
     public function testUploadTakesAppropriateFirstArugment($upload)
     {
         $upload = (is_object($upload)) ? $upload : new Upload($upload);
@@ -38,19 +37,15 @@ class HttpMessageUploadTest extends TestCase
         $this->assertNull($upload->getClientMediaType());
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testUploadThrowsErrorOnInvalidFirstArugment()
     {
+        $this->expectException(InvalidArgumentException::class);
         new Upload([]);
     }
 
-    /**
-     * @expectedException RuntimeException
-     */
     public function testGetStreamThrowsExceptionAfterMoved()
     {
+        $this->expectException(RuntimeException::class);
         $upload = new Upload('php://temp');
         $upload->moveTo($this->tmp);
         $upload->getStream();
@@ -74,21 +69,17 @@ class HttpMessageUploadTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException RuntimeException
-     */
     public function testMoveCannotBePerformedMoreThanOnce()
     {
+        $this->expectException(RuntimeException::class);
         $upload = new Upload('php://temp');
         $upload->moveTo($this->tmp);
         $upload->moveTo($this->tmp);
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testNonWritableTargetsThrowsException()
     {
+        $this->expectException(InvalidArgumentException::class);
         (new Upload('php://temp'))
             ->moveTo(new Stream('php://temp'));
     }

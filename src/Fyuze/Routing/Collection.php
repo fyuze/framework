@@ -23,18 +23,6 @@ class Collection
      * @param array $options
      * @return Collection
      */
-    public function get($route, $name, $action, $options = [])
-    {
-        return $this->add($route, $name, $action, array_merge(['method' => 'GET'], $options));
-    }
-
-    /**
-     * @param $route
-     * @param $action
-     * @param null $name
-     * @param array $options
-     * @return Collection
-     */
     public function post($route, $name, $action, $options = [])
     {
         return $this->add($route, $name, $action, array_merge(['method' => 'POST'], $options));
@@ -44,6 +32,18 @@ class Collection
      * @param $route
      * @param $action
      * @param null $name
+     * @param array $options
+     * @return Collection
+     */
+    public function get($route, $name, $action, $options = [])
+    {
+        return $this->add($route, $name, $action, array_merge(['method' => 'GET'], $options));
+    }
+
+    /**
+     * @param $route
+     * @param $name
+     * @param $action
      * @param array $options
      * @return $this
      */
